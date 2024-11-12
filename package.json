@@ -1,0 +1,22 @@
+{
+  "name": "qairline",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "build:frontend": "npm run build --prefix apps/client",
+    "build:backend": "npm run build --prefix apps/api",
+    "build": "npm run build:frontend && npm run build:backend",
+    "start:backend": "npm run start --prefix apps/api",
+    "start:frontend": "npm run dev --prefix apps/client",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "test:backend": "npm run test --prefix apps/api"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
