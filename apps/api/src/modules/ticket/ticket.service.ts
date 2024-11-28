@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AircraftService } from '../aircraft/aircraft.service';
@@ -27,7 +31,16 @@ export class TicketService {
   }
   //Xem chi tiết vé theo id, lưu id ở bên fronend
   async getTicketById(id: string, userEmail: string): Promise<Ticket> {
-    const ticket = await this.ticketModel.findById({ id, userEmail }).exec();
+    const ticket = await this.ticketModel.findById(id).exec();
+
+    if (!ticket) {
+      throw new NotFoundException(`Ticket with ID ${id} not found`);
+    }
+    if (ticket.userEmail !== userEmail) {
+      throw new ForbiddenException(
+        'You are not authorized to view this ticket',
+      );
+    }
     return ticket;
   }
   //Huỷ vé máy bay nhưng phải trước một ngày

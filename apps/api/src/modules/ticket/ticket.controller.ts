@@ -33,7 +33,7 @@ export class TicketController {
   @Get(':id')
   async getTicketById(
     @Param('id') id: string,
-    @Param('userEmail') userEmail: string,
+    @Query('userEmail') userEmail: string,
   ): Promise<Ticket> {
     return this.ticketService.getTicketById(id, userEmail);
   }
@@ -41,10 +41,9 @@ export class TicketController {
   //Huỷ vé
   @Delete(':id')
   async cancelTicket(
-    @Param('id') id: string,
     @Query('userEmail') userEmail: string,
+    @Param('id') id: string,
   ): Promise<{ message: string }> {
-    const message = await this.ticketService.cancelTicket(id, userEmail);
-    return message;
+    return this.ticketService.cancelTicket(id, userEmail);
   }
 }
