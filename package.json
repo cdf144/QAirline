@@ -18,5 +18,9 @@
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "@nestjs/mongoose": "^10.1.0",
+    "mongoose": "^8.8.2"
   }
 }
