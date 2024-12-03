@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Gender } from '../user.schema';
+import { Gender } from '../schemas/user.schema';
 
 export class RegisterDto {
   @IsString()

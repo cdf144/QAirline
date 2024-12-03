@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { Role } from '../../common/role.enum';
+import { Role } from 'src/common/role.enum';
 
 export type UserDocument = HydratedDocument<User>;
 
 export enum Gender {
-  male = 'male',
-  female = 'female',
-  other = 'other',
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
 }
 
 @Schema()
