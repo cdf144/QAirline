@@ -7,20 +7,16 @@
     "apps/*"
   ],
   "scripts": {
-    "build:frontend": "npm run build --prefix apps/client",
-    "build:backend": "npm run build --prefix apps/api",
+    "build:backend": "npm run build -w api",
+    "build:frontend": "npm run build -w client",
     "build": "npm run build:frontend && npm run build:backend",
-    "start:backend": "npm run start --prefix apps/api",
-    "start:frontend": "npm run dev --prefix apps/client",
+    "start:backend": "npm run start -w api",
+    "start:frontend": "npm run dev -w client",
     "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
-    "test:backend": "npm run test --prefix apps/api"
+    "test:backend": "npm run test -w api"
   },
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^9.1.0"
-  },
-  "dependencies": {
-    "@nestjs/mongoose": "^10.1.0",
-    "mongoose": "^8.8.2"
   }
 }
