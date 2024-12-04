@@ -6,7 +6,6 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as bodyParser from 'body-parser';
 import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 
@@ -32,7 +31,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.use(bodyParser.json());
   SwaggerModule.setup('api', app, () =>
     SwaggerModule.createDocument(app, config),
   );

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { RegisterDto } from './dto/register.dto';
@@ -14,20 +18,30 @@ export class UserService {
 
   async createUser(registerDto: RegisterDto): Promise<User> {
     const { email } = registerDto;
-    const user = await this.userModel.findOne({ email });
-    if (user !== null) {
-      throw new BadRequestException('Email already in use');
-    }
-    const newUser = await this.userModel.create({
-      email,
-      password: registerDto.password,
-      fullName: registerDto.fullName,
-      sex: registerDto.sex,
-      phone: registerDto.phone,
-      IDCardNumber: registerDto.IDCardNumber,
-      isAdmin: false,
-      createdAt: new Date(),
-    });
-    return newUser.save();
+    return this.userModel
+      .findOne({ email })
+      .exec()
+      .then((user) => {
+        if (user) {
+          throw new BadRequestException('Email already in use');
+        }
+        const newUser = new this.userModel({
+          email,
+          password: registerDto.password,
+          fullName: registerDto.fullName,
+          sex: registerDto.sex,
+          phone: registerDto.phone,
+          IDCardNumber: registerDto.IDCardNumber,
+          isAdmin: false,
+          createdAt: new Date(),
+        });
+        return newUser.save();
+      })
+      .catch((error) => {
+        if (error instanceof BadRequestException) {
+          throw error;
+        }
+        throw new InternalServerErrorException('Failed to create user');
+      });
   }
 }
