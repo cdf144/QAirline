@@ -1,8 +1,7 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { Category } from '../blog.schema';
 
 export class CreateBlogDto {
-  @IsNumber()
   @IsNotEmpty()
   adminId: number;
 

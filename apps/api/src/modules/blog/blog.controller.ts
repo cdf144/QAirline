@@ -1,34 +1,33 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-} from '@nestjs/common';
-import { Blog } from './blog.schema';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { FastifyReply } from 'fastify';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 
-@Controller('blogs')
+@Controller('v1/blog')
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  //Tạo các bài đăng mới về tin tức, khuyến mại, etc...
-  async create(@Body() createBlogDto: CreateBlogDto): Promise<Blog> {
-    return this.blogService.create(createBlogDto);
+  async create(
+    @Res() res: FastifyReply,
+    @Body() createBlogDto: CreateBlogDto,
+  ): Promise<void> {
+    const blog = await this.blogService.create(createBlogDto);
+    res.send(blog);
   }
-  //Lấy các blog cho người dùng xem
+
   @Get()
-  async findAll(): Promise<Blog[]> {
-    return this.blogService.findAll();
+  async findAll(@Res() res: FastifyReply): Promise<void> {
+    const blogs = await this.blogService.findAll();
+    res.send(blogs);
   }
-  //Truy cập vào một bài đăng
+
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Blog> {
-    return this.blogService.findOne(id);
+  async findOne(
+    @Res() res: FastifyReply,
+    @Param('id') id: string,
+  ): Promise<void> {
+    const blog = await this.blogService.findOne(id);
+    res.send(blog);
   }
 }
