@@ -31,7 +31,7 @@ export class UserService {
           fullName: registerDto.fullName,
           sex: registerDto.sex,
           phone: registerDto.phone,
-          IDCardNumber: registerDto.IDCardNumber,
+          idCardNumber: registerDto.idCardNumber,
           isAdmin: false,
           createdAt: new Date(),
         });

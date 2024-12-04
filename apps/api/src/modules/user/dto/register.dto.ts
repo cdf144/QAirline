@@ -28,5 +28,5 @@ export class RegisterDto {
 
   @IsNotEmpty()
   @ApiProperty()
-  IDCardNumber: string;
+  idCardNumber: string;
 }

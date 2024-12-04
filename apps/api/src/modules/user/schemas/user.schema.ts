@@ -28,7 +28,7 @@ export class User {
   phone: string;
 
   @Prop({ unique: true })
-  IDCardNumber: string;
+  idCardNumber: string;
 
   @Prop()
   isAdmin: boolean;
