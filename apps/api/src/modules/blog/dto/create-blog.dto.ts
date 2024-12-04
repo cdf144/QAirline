@@ -1,16 +1,24 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 import { Category } from '../schemas/blog.schema';
 
 export class CreateBlogDto {
-  @IsNotEmpty()
-  adminId: number;
-
+  @IsOptional()
   @IsString()
+  @Length(24, 24)
+  adminId: string;
+
   @IsNotEmpty()
+  @IsString()
   title: string;
 
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   body: string;
 
   @IsEnum(Category)

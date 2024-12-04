@@ -12,18 +12,18 @@ export enum Category {
 @Schema()
 export class Blog {
   @Prop({ type: Types.ObjectId, ref: 'User', default: null })
-  adminId: number;
+  adminId: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   title: string;
 
-  @Prop()
+  @Prop({ required: true })
   body: string;
 
-  @Prop({ enum: Category })
+  @Prop({ enum: Category, required: true })
   category: Category;
 
-  @Prop()
+  @Prop({ default: new Date() })
   createdAt: Date;
 }
 

@@ -27,7 +27,7 @@ export class BlogController {
     @Res() res: FastifyReply,
     @Param('id') id: string,
   ): Promise<void> {
-    const blog = await this.blogService.findOne(id);
+    const blog = await this.blogService.findOneById(id);
     res.send(blog);
   }
 }

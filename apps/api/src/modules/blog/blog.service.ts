@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { Blog, BlogDocument } from './schemas/blog.schema';
 
@@ -13,7 +13,17 @@ export class BlogService {
   constructor(@InjectModel(Blog.name) private blogModel: Model<BlogDocument>) {}
 
   async create(createBlogDto: CreateBlogDto): Promise<Blog> {
-    const createdBlog = new this.blogModel(createBlogDto);
+    let adminObjectId = null;
+    if (createBlogDto.adminId) {
+      adminObjectId = Types.ObjectId.createFromHexString(createBlogDto.adminId);
+    }
+
+    const createdBlog = new this.blogModel({
+      adminId: adminObjectId,
+      title: createBlogDto.title,
+      body: createBlogDto.body,
+      category: createBlogDto.category,
+    });
     return createdBlog.save();
   }
 
@@ -21,7 +31,7 @@ export class BlogService {
     return this.blogModel.find().exec();
   }
 
-  async findOne(id: string): Promise<Blog> {
+  async findOneById(id: string): Promise<Blog> {
     return this.blogModel
       .findById(id)
       .exec()
