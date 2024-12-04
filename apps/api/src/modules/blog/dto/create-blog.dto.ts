@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { Category } from '../blog.schema';
+import { Category } from '../schemas/blog.schema';
 
 export class CreateBlogDto {
   @IsNotEmpty()
