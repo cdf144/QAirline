@@ -1,27 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import { IsVietnamIdCardNumber } from 'src/app.validators';
 import { Gender } from '../schemas/user.schema';
 
 export class RegisterDto {
+  @IsEmail()
+  @ApiProperty()
+  readonly email: string;
+
+  // TODO: Finalize on password constraints and validation
   @IsString()
-  @IsNotEmpty()
   @ApiProperty()
-  email: string;
+  readonly password: string;
 
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  password: string;
+  @ApiProperty({ required: false })
+  readonly fullName?: string;
 
-  @ApiProperty()
-  fullName: string;
+  @IsOptional()
+  @ApiProperty({ enum: Gender, required: false })
+  readonly sex: Gender;
 
-  @ApiProperty({ enum: Gender })
-  sex: Gender;
+  @IsOptional()
+  @IsPhoneNumber('VN')
+  @ApiProperty({ required: false })
+  readonly phone: string;
 
-  @ApiProperty()
-  phone: string;
-
-  @ApiProperty()
-  idCardNumber: string;
+  @IsOptional()
+  @IsVietnamIdCardNumber()
+  @ApiProperty({ required: false })
+  readonly idCardNumber: string;
 }

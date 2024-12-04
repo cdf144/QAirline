@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { normalizePhoneNumber } from 'src/utils/phone-number.util';
 import { RegisterDto } from './dto/register.dto';
 import { User, UserDocument } from './schemas/user.schema';
 
@@ -18,15 +19,18 @@ export class UserService {
 
   async createUser(registerDto: RegisterDto): Promise<User> {
     const { email, phone, idCardNumber } = registerDto;
+    const normalizedPhone = normalizePhoneNumber(phone);
     return this.userModel
-      .findOne({ $or: [{ email }, { phone }, { idCardNumber }] })
+      .findOne({
+        $or: [{ email }, { phone: normalizedPhone }, { idCardNumber }],
+      })
       .exec()
       .then((existingUser) => {
         if (existingUser) {
           if (existingUser.email === email) {
             throw new BadRequestException('Email already in use');
           }
-          if (existingUser.phone === phone) {
+          if (existingUser.phone === normalizedPhone) {
             throw new BadRequestException('Phone already in use');
           }
           if (existingUser.idCardNumber === idCardNumber) {
@@ -39,7 +43,7 @@ export class UserService {
           password: registerDto.password,
           fullName: registerDto.fullName,
           sex: registerDto.sex,
-          phone: registerDto.phone,
+          phone: normalizedPhone,
           idCardNumber: registerDto.idCardNumber,
         });
         return newUser.save();
@@ -48,6 +52,7 @@ export class UserService {
         if (error instanceof BadRequestException) {
           throw error;
         }
+        console.error(error);
         throw new InternalServerErrorException('Failed to create user');
       });
   }

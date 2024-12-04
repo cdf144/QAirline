@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
 import { RegisterDto } from './dto/register.dto';
@@ -10,13 +10,13 @@ export class UserController {
   constructor(private UserService: UserService) {}
 
   @Post('register')
-  @ApiResponse({ status: 201, description: 'User created' })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'User created' })
   @ApiResponse({
-    status: 400,
+    status: HttpStatus.BAD_REQUEST,
     description: 'Email, phone, or ID card number already in use',
   })
   @ApiResponse({
-    status: 500,
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Failed to create user due to server error',
   })
   async createUser(
@@ -24,6 +24,6 @@ export class UserController {
     @Body() RegisterDto: RegisterDto,
   ): Promise<void> {
     const user = await this.UserService.createUser(RegisterDto);
-    res.code(201).send(user);
+    res.send(user);
   }
 }
