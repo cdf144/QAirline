@@ -4,9 +4,9 @@ import { HydratedDocument, Types } from 'mongoose';
 export type BlogDocument = HydratedDocument<Blog>;
 
 export enum Category {
-  Notification = 'Notification',
-  News = 'News',
-  Promotion = 'Promotion',
+  Notification = 'notification',
+  News = 'news',
+  Promotion = 'promotion',
 }
 
 @Schema()

@@ -1,27 +1,22 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Length,
-} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
 import { Category } from '../schemas/blog.schema';
 
 export class CreateBlogDto {
   @IsOptional()
-  @IsString()
   @Length(24, 24)
+  @ApiProperty({ required: false })
   adminId: string;
 
-  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   title: string;
 
-  @IsNotEmpty()
   @IsString()
+  @ApiProperty()
   body: string;
 
   @IsEnum(Category)
-  @IsNotEmpty()
+  @ApiProperty({ enum: Category })
   category: Category;
 }

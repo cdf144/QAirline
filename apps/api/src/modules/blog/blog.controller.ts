@@ -1,13 +1,28 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 
+@ApiTags('blog')
 @Controller('v1/blog')
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Post()
+  @ApiCreatedResponse({ description: 'Blog created' })
+  @ApiBadRequestResponse({
+    description: 'Invalid attribute(s) provided to create blog',
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Failed to create blog due to server error',
+  })
   async create(
     @Res() res: FastifyReply,
     @Body() createBlogDto: CreateBlogDto,
@@ -17,12 +32,21 @@ export class BlogController {
   }
 
   @Get()
+  @ApiOkResponse({ description: 'Blogs found' })
+  @ApiInternalServerErrorResponse({
+    description: 'Failed to find blogs due to server error',
+  })
   async findAll(@Res() res: FastifyReply): Promise<void> {
     const blogs = await this.blogService.findAll();
     res.send(blogs);
   }
 
   @Get(':id')
+  @ApiOkResponse({ description: 'Blog found' })
+  @ApiBadRequestResponse({ description: 'Invalid blog ID' })
+  @ApiInternalServerErrorResponse({
+    description: 'Failed to find blog due to server error',
+  })
   async findOne(
     @Res() res: FastifyReply,
     @Param('id') id: string,
