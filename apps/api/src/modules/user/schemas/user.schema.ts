@@ -30,10 +30,7 @@ export class User {
   @Prop({ unique: true })
   idCardNumber: string;
 
-  @Prop()
-  isAdmin: boolean;
-
-  @Prop()
+  @Prop({ default: new Date() })
   createdAt: Date;
 
   @Prop({ type: [String], enum: Role, default: [Role.User] })

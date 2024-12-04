@@ -32,8 +32,6 @@ export class UserService {
           sex: registerDto.sex,
           phone: registerDto.phone,
           idCardNumber: registerDto.idCardNumber,
-          isAdmin: false,
-          createdAt: new Date(),
         });
         return newUser.save();
       })
