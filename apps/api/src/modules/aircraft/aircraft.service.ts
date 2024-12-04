@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Aircraft, AircraftDocument } from './aircraft.schema';
+import { Aircraft, AircraftDocument } from './schemas/aircraft.schema';
 
 @Injectable()
 export class AircraftService {

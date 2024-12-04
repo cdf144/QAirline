@@ -1,8 +1,8 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CreateTicketDto } from './dto/create-ticket.dto';
+import { ClassType, Status, Ticket, TripType } from './schemas/ticket.schema';
 import { TicketController } from './ticket.controller';
-import { ClassType, Status, Ticket, TripType } from './ticket.schema';
 import { TicketService } from './ticket.service';
 
 const mockTicket = {

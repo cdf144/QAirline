@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { Ticket } from './ticket.schema';
+import { Ticket } from './schemas/ticket.schema';
 import { TicketService } from './ticket.service';
 
 @Controller('tickets')

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Status } from '../ticket/ticket.schema';
+import { Status } from '../ticket/schemas/ticket.schema';
 import { TicketService } from './../ticket/ticket.service';
 
 @Injectable()

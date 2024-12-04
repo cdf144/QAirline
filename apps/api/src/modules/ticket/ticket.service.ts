@@ -7,7 +7,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AircraftService } from '../aircraft/aircraft.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { ClassType, Status, Ticket, TicketDocument } from './ticket.schema';
+import {
+  ClassType,
+  Status,
+  Ticket,
+  TicketDocument,
+} from './schemas/ticket.schema';
 
 @Injectable()
 export class TicketService {

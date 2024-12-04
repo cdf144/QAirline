@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { Aircraft } from './aircraft.schema';
 import { AircraftService } from './aircraft.service';
 import { CreateAircraftDto } from './dto/create-aircraft.dto';
+import { Aircraft } from './schemas/aircraft.schema';
 
 @Controller('aircraft')
 export class AircraftController {

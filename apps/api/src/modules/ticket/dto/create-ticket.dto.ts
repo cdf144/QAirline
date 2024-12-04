@@ -6,7 +6,7 @@ import {
   IsNumber,
   IsString,
 } from 'class-validator';
-import { ClassType, TripType } from '../ticket.schema';
+import { ClassType, TripType } from '../schemas/ticket.schema';
 
 export class CreateTicketDto {
   @IsEnum(TripType)

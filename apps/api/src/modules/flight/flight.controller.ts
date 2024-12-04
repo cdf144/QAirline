@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { FlightFindDto } from './dto/find-flight.dto';
-import { Flight } from './flight.schema';
 import { FlightService } from './flight.service';
+import { Flight } from './schemas/flight.schema';
 
 @Controller('flight')
 export class FlightController {

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { Airport } from './airport.schema';
 import { AirportService } from './airport.service';
 import { CreateAirportDto } from './dto/create-airport.dto';
+import { Airport } from './schemas/airport.schema';
 
 @Controller('airport')
 export class AirportController {

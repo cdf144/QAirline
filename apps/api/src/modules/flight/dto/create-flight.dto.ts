@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
-import { Status } from '../flight.schema';
+import { Status } from '../schemas/flight.schema';
 
 export class CreateFlightDto {
   @IsNumber()
