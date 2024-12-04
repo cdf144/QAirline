@@ -12,10 +12,10 @@ export enum Gender {
 
 @Schema()
 export class User {
-  @Prop({ unique: true })
+  @Prop({ unique: true, required: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 
   @Prop()
