@@ -17,16 +17,25 @@ export class UserService {
   }
 
   async createUser(registerDto: RegisterDto): Promise<User> {
-    const { email } = registerDto;
+    const { email, phone, idCardNumber } = registerDto;
     return this.userModel
-      .findOne({ email })
+      .findOne({ $or: [{ email }, { phone }, { idCardNumber }] })
       .exec()
-      .then((user) => {
-        if (user) {
-          throw new BadRequestException('Email already in use');
+      .then((existingUser) => {
+        if (existingUser) {
+          if (existingUser.email === email) {
+            throw new BadRequestException('Email already in use');
+          }
+          if (existingUser.phone === phone) {
+            throw new BadRequestException('Phone already in use');
+          }
+          if (existingUser.idCardNumber === idCardNumber) {
+            throw new BadRequestException('ID card number already in use');
+          }
         }
+
         const newUser = new this.userModel({
-          email,
+          email: registerDto.email,
           password: registerDto.password,
           fullName: registerDto.fullName,
           sex: registerDto.sex,

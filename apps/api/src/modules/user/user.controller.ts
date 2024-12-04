@@ -11,7 +11,10 @@ export class UserController {
 
   @Post('register')
   @ApiResponse({ status: 201, description: 'User created' })
-  @ApiResponse({ status: 400, description: 'Email already in use' })
+  @ApiResponse({
+    status: 400,
+    description: 'Email, phone, or ID card number already in use',
+  })
   @ApiResponse({
     status: 500,
     description: 'Failed to create user due to server error',

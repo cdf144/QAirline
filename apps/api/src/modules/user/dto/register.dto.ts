@@ -13,20 +13,15 @@ export class RegisterDto {
   @ApiProperty()
   password: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
   fullName: string;
 
-  @IsNotEmpty()
   @ApiProperty({ enum: Gender })
   sex: Gender;
 
-  @IsNotEmpty()
   @ApiProperty()
   phone: string;
 
-  @IsNotEmpty()
   @ApiProperty()
   idCardNumber: string;
 }
