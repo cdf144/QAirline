@@ -20,7 +20,7 @@ export class Aircraft {
   @Prop({ default: null })
   businessSeat: number;
 
-  @Prop()
+  @Prop({ default: new Date() })
   createdAt: Date;
 }
 

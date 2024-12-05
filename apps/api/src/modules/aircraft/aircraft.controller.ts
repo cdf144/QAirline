@@ -1,22 +1,28 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { FastifyReply } from 'fastify';
 import { AircraftService } from './aircraft.service';
 import { CreateAircraftDto } from './dto/create-aircraft.dto';
-import { Aircraft } from './schemas/aircraft.schema';
 
-@Controller('aircraft')
+@Controller('v1/aircraft')
 export class AircraftController {
   constructor(private readonly aircraftService: AircraftService) {}
 
   @Post()
-  //Tạo các tàu bay mới
   async createAircraft(
+    @Res() res: FastifyReply,
     @Body() createAircraftDto: CreateAircraftDto,
-  ): Promise<Aircraft> {
-    return this.aircraftService.createAircraft(createAircraftDto);
+  ): Promise<void> {
+    const newAircraft =
+      await this.aircraftService.createAircraft(createAircraftDto);
+    res.send(newAircraft);
   }
-  //Lấy các tàu bay với code
+
   @Get(':id')
-  async getAircraftByCode(@Param('id') _id: string): Promise<Aircraft> {
-    return this.aircraftService.getAircraftById(_id);
+  async getAircraftByCode(
+    @Res() res: FastifyReply,
+    @Param('id') id: string,
+  ): Promise<void> {
+    const aircraft = await this.aircraftService.getAircraftById(id);
+    res.send(aircraft);
   }
 }

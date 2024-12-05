@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Aircraft, AircraftDocument } from './schemas/aircraft.schema';
@@ -9,7 +9,7 @@ export class AircraftService {
     @InjectModel(Aircraft.name) private aircraftModel: Model<AircraftDocument>,
   ) {}
   async createAircraft(aircraftData: Partial<Aircraft>): Promise<Aircraft> {
-    const newAircraft = await this.aircraftModel.create(aircraftData);
+    const newAircraft = new this.aircraftModel(aircraftData);
     return newAircraft.save();
   }
 
@@ -18,6 +18,21 @@ export class AircraftService {
   }
 
   async getAircraftById(id: string): Promise<Aircraft> {
-    return this.aircraftModel.findOne({ _id: id }).exec();
+    return this.aircraftModel
+      .findOne({ _id: id })
+      .exec()
+      .then((aircraft) => {
+        if (!aircraft) {
+          throw new NotFoundException(`Aircraft with id ${id} not found`);
+        }
+        return aircraft;
+      })
+      .catch((error) => {
+        if (error instanceof NotFoundException) {
+          throw error;
+        }
+        console.error(error);
+        throw new NotFoundException('Failed to find aircraft');
+      });
   }
 }
