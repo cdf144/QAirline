@@ -16,16 +16,10 @@ export class AircraftService {
   async createAircraft(
     createAircraftDto: CreateAircraftDto,
   ): Promise<Aircraft> {
-    const { economySeat, businessSeat } = createAircraftDto;
-    const totalSeat = economySeat + businessSeat;
-    if (totalSeat > 1000) {
-      throw new BadRequestException('Total seat must not exceed 1000');
-    }
-
     const newAircraft = new this.aircraftModel({
       manufacturer: createAircraftDto.manufacturer,
       model: createAircraftDto.model,
-      totalSeat: totalSeat,
+      totalSeat: createAircraftDto.totalSeat,
       economySeat: createAircraftDto.economySeat,
       businessSeat: createAircraftDto.businessSeat,
     });
