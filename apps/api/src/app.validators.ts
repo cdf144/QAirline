@@ -5,6 +5,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
+import { vietnamAirportIataList } from './common/vietnam-airport-iata.list';
 
 /**
  * **Custom Validator**
@@ -78,6 +79,25 @@ export function IsPriceString(validationOptions?: ValidationOptions) {
   };
 }
 
+/**
+ * **Custom Validator**
+ *
+ * Checks if the string is a 3-letter uppercase string representing an airport
+ * code in Vietnam.
+ * If given value is not a string, then it returns false.
+ */
+export function IsVietnamAirportCode(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsVietnamAirportCodeConstraint,
+    });
+  };
+}
+
 @ValidatorConstraint({ async: false })
 export class IsVietnamIdCardNumberConstraint
   implements ValidatorConstraintInterface
@@ -140,5 +160,23 @@ export class IsPriceStringConstraint implements ValidatorConstraintInterface {
 
   defaultMessage(args: ValidationArguments) {
     return `${args.property} must be a string representing a number with up to 2 decimal places`;
+  }
+}
+
+@ValidatorConstraint({ async: false })
+export class IsVietnamAirportCodeConstraint
+  implements ValidatorConstraintInterface
+{
+  validate(value: any) {
+    const airportCodeRegex = /^[A-Z]{3}$/;
+    return (
+      typeof value !== 'string' &&
+      airportCodeRegex.test(value) &&
+      Object.values(vietnamAirportIataList).includes(value)
+    );
+  }
+
+  defaultMessage() {
+    return 'Airport code must be a 3-letter uppercase string';
   }
 }
