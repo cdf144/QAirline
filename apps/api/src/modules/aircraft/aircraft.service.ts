@@ -17,11 +17,11 @@ export class AircraftService {
     return newAircraft.save();
   }
 
-  async getAllAircraft(): Promise<Aircraft[]> {
+  async findAll(): Promise<Aircraft[]> {
     return this.aircraftModel.find().exec();
   }
 
-  async getAircraftById(id: string): Promise<Aircraft> {
+  async findOneById(id: string): Promise<Aircraft> {
     return this.aircraftModel
       .findById(id)
       .exec()

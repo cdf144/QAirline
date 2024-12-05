@@ -51,7 +51,7 @@ export class BlogController {
   @ApiInternalServerErrorResponse({
     description: 'Failed to find blog due to server error',
   })
-  async findOne(
+  async findOneById(
     @Res() res: FastifyReply,
     @Param('id') id: string,
   ): Promise<void> {

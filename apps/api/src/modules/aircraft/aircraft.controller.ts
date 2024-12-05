@@ -17,12 +17,18 @@ export class AircraftController {
     res.send(newAircraft);
   }
 
+  @Get()
+  async findAll(@Res() res: FastifyReply): Promise<void> {
+    const aircraft = await this.aircraftService.findAll();
+    res.send(aircraft);
+  }
+
   @Get(':id')
-  async getAircraftByCode(
+  async findOneById(
     @Res() res: FastifyReply,
     @Param('id') id: string,
   ): Promise<void> {
-    const aircraft = await this.aircraftService.getAircraftById(id);
+    const aircraft = await this.aircraftService.findOneById(id);
     res.send(aircraft);
   }
 }
