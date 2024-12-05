@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsHexStringId } from 'src/app.validators';
 import { Category } from '../schemas/blog.schema';
 
 export class CreateBlogDto {
   @IsOptional()
-  @Length(24, 24)
+  @IsHexStringId()
   @ApiProperty({ required: false })
   adminId: string;
 

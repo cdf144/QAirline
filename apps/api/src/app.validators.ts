@@ -17,6 +17,18 @@ export function IsVietnamIdCardNumber(validationOptions?: ValidationOptions) {
   };
 }
 
+export function IsHexStringId(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsHexStringIdConstraint,
+    });
+  };
+}
+
 export function IsStringOrNumberArray(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
@@ -40,6 +52,18 @@ export class IsVietnamIdCardNumberConstraint
 
   defaultMessage(): string {
     return 'ID card number must be a 12-digit number';
+  }
+}
+
+@ValidatorConstraint({ async: false })
+export class IsHexStringIdConstraint implements ValidatorConstraintInterface {
+  validate(value: any) {
+    const hexStringRegex = /^[0-9a-fA-F]{24}$/;
+    return hexStringRegex.test(value);
+  }
+
+  defaultMessage() {
+    return 'ID must be a 24-character hexadecimal string';
   }
 }
 

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Aircraft, AircraftDocument } from './schemas/aircraft.schema';
@@ -19,17 +23,22 @@ export class AircraftService {
 
   async getAircraftById(id: string): Promise<Aircraft> {
     return this.aircraftModel
-      .findOne({ _id: id })
+      .findById(id)
       .exec()
       .then((aircraft) => {
         if (!aircraft) {
-          throw new NotFoundException(`Aircraft with id ${id} not found`);
+          throw new NotFoundException(`Aircraft with id '${id}' not found`);
         }
         return aircraft;
       })
       .catch((error) => {
         if (error instanceof NotFoundException) {
           throw error;
+        }
+        if (error.name === 'CastError') {
+          throw new BadRequestException(
+            `Invalid hexstring id '${id}' provided to find aircraft`,
+          );
         }
         console.error(error);
         throw new NotFoundException('Failed to find aircraft');

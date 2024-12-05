@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -37,13 +38,18 @@ export class BlogService {
       .exec()
       .then((blog) => {
         if (!blog) {
-          throw new NotFoundException(`Blog with id ${id} not found`);
+          throw new NotFoundException(`Blog with id '${id}' not found`);
         }
         return blog;
       })
       .catch((error) => {
         if (error instanceof NotFoundException) {
           throw error;
+        }
+        if (error.name === 'CastError') {
+          throw new BadRequestException(
+            `Invalid hexstring id '${id}' provided to find blog`,
+          );
         }
         console.error(error);
         throw new InternalServerErrorException('Failed to find blog');

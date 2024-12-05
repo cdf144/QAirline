@@ -3,6 +3,7 @@ import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -43,7 +44,10 @@ export class BlogController {
 
   @Get(':id')
   @ApiOkResponse({ description: 'Blog found' })
-  @ApiBadRequestResponse({ description: 'Invalid blog ID' })
+  @ApiBadRequestResponse({
+    description: 'Invalid hexstring id provided to find blog',
+  })
+  @ApiNotFoundResponse({ description: 'Blog with specified id not found' })
   @ApiInternalServerErrorResponse({
     description: 'Failed to find blog due to server error',
   })
