@@ -39,8 +39,8 @@ export class AircraftController {
     description: 'Failed to find aircrafts due to server error',
   })
   async findAll(@Res() res: FastifyReply): Promise<void> {
-    const aircraft = await this.aircraftService.findAll();
-    res.send(aircraft);
+    const aircrafts = await this.aircraftService.findAll();
+    res.send(aircrafts);
   }
 
   @Get(':id')

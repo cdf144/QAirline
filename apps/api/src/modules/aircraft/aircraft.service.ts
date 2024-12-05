@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -50,7 +51,7 @@ export class AircraftService {
           );
         }
         console.error(error);
-        throw new NotFoundException('Failed to find aircraft');
+        throw new InternalServerErrorException('Failed to find aircraft');
       });
   }
 }

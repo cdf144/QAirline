@@ -28,8 +28,8 @@ export class BlogController {
     @Res() res: FastifyReply,
     @Body() createBlogDto: CreateBlogDto,
   ): Promise<void> {
-    const blog = await this.blogService.create(createBlogDto);
-    res.send(blog);
+    const newBlog = await this.blogService.create(createBlogDto);
+    res.send(newBlog);
   }
 
   @Get()

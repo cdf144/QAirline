@@ -26,7 +26,7 @@ export class UserController {
     @Res() res: FastifyReply,
     @Body() RegisterDto: RegisterDto,
   ): Promise<void> {
-    const user = await this.UserService.createUser(RegisterDto);
-    res.send(user);
+    const newUser = await this.UserService.createUser(RegisterDto);
+    res.send(newUser);
   }
 }
