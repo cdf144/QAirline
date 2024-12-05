@@ -3,35 +3,38 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type FlightDocument = HydratedDocument<Flight>;
 
-export enum Status {
-  Scheduled = 'Scheduled',
-  Delayed = 'Delayed',
-  Cancelled = 'Cancelled',
-  Flying = 'Flying',
-  Landed = 'Landed',
+export enum FlightStatus {
+  Scheduled = 'scheduled',
+  Delayed = 'delayed',
+  Cancelled = 'cancelled',
+  Flying = 'flying',
+  Landed = 'landed',
 }
 
 @Schema()
 export class Flight {
-  @Prop()
+  @Prop({ type: Types.ObjectId, ref: 'Aircraft', required: true })
   aircraftId: number;
 
-  @Prop({ type: Types.ObjectId, ref: 'Airport', default: null })
+  @Prop({ type: Types.ObjectId, ref: 'Airport', required: true })
   departureAirportId: number;
 
-  @Prop({ type: Types.ObjectId, ref: 'Airport', default: null })
+  @Prop({ type: Types.ObjectId, ref: 'Airport', required: true })
   destinationAirportId: number;
 
-  @Prop()
-  dayFlight: Date;
+  @Prop({ required: true })
+  departureTime: Date;
 
-  @Prop({ enum: Status })
-  status: Status;
+  @Prop({ required: true })
+  arrivalTime: Date;
 
-  @Prop()
-  price: number;
+  @Prop({ enum: FlightStatus, default: FlightStatus.Scheduled })
+  status: FlightStatus;
 
-  @Prop()
+  @Prop({ type: Types.Decimal128, required: true })
+  price: Types.Decimal128;
+
+  @Prop({ default: new Date() })
   createdAt: Date;
 }
 

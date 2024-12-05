@@ -1,5 +1,6 @@
 import {
   registerDecorator,
+  ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
@@ -59,6 +60,24 @@ export function IsStringOrNumberArray(validationOptions?: ValidationOptions) {
   };
 }
 
+/**
+ * **Custom Validator**
+ *
+ * Checks if the string represents a number with up to 2 decimal places.
+ * If given value is not a string, then it returns false.
+ */
+export function IsPriceString(validationOptions?: ValidationOptions) {
+  return function (object: object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      constraints: [],
+      validator: IsPriceStringConstraint,
+    });
+  };
+}
+
 @ValidatorConstraint({ async: false })
 export class IsVietnamIdCardNumberConstraint
   implements ValidatorConstraintInterface
@@ -86,8 +105,8 @@ export class IsHexStringIdConstraint implements ValidatorConstraintInterface {
     return hexStringRegex.test(value);
   }
 
-  defaultMessage() {
-    return 'ID must be a 24-character hexadecimal string';
+  defaultMessage(args: ValidationArguments) {
+    return `${args.property} must be a 24-character hexadecimal string`;
   }
 }
 
@@ -106,5 +125,20 @@ export class IsStringOrNumberArrayConstraint
 
   defaultMessage() {
     return 'Array must contain only strings or numbers';
+  }
+}
+
+@ValidatorConstraint({ async: false })
+export class IsPriceStringConstraint implements ValidatorConstraintInterface {
+  validate(value: any) {
+    if (typeof value !== 'string') {
+      return false;
+    }
+    const priceStringRegex = /^\d+(\.\d{1,2})?$/;
+    return priceStringRegex.test(value);
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    return `${args.property} must be a string representing a number with up to 2 decimal places`;
   }
 }
