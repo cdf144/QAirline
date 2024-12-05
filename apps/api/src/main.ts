@@ -20,9 +20,8 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('QAirline API')
-    .setDescription('The QAirline API description')
+    .setDescription('API documentation for QAirline')
     .setVersion('1.0')
-    .addTag('airline')
     .build();
   app.useGlobalPipes(
     new ValidationPipe({
