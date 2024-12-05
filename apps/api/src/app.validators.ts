@@ -5,6 +5,12 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
+/**
+ * **Custom Validator**
+ *
+ * Checks if the string is a 12-digit number (length of Vietnam ID card number).
+ * If given value is not a string, then it returns false.
+ */
 export function IsVietnamIdCardNumber(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
@@ -17,6 +23,12 @@ export function IsVietnamIdCardNumber(validationOptions?: ValidationOptions) {
   };
 }
 
+/**
+ * **Custom Validator**
+ *
+ * Checks if the string is a 24-character hexadecimal string.
+ * If given value is not a string, then it returns false.
+ */
 export function IsHexStringId(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
@@ -29,6 +41,12 @@ export function IsHexStringId(validationOptions?: ValidationOptions) {
   };
 }
 
+/**
+ * **Custom Validator**
+ *
+ * Checks if the array contains only strings or numbers.
+ * If given value is not an array, then it returns false.
+ */
 export function IsStringOrNumberArray(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
     registerDecorator({
@@ -46,6 +64,9 @@ export class IsVietnamIdCardNumberConstraint
   implements ValidatorConstraintInterface
 {
   validate(value: any): Promise<boolean> | boolean {
+    if (typeof value !== 'string') {
+      return false;
+    }
     const idCardNumberRegex = /^\d{12}$/;
     return idCardNumberRegex.test(value);
   }
@@ -58,6 +79,9 @@ export class IsVietnamIdCardNumberConstraint
 @ValidatorConstraint({ async: false })
 export class IsHexStringIdConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
+    if (typeof value !== 'string') {
+      return false;
+    }
     const hexStringRegex = /^[0-9a-fA-F]{24}$/;
     return hexStringRegex.test(value);
   }
