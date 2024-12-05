@@ -99,9 +99,7 @@ export function IsVietnamAirportCode(validationOptions?: ValidationOptions) {
 }
 
 @ValidatorConstraint({ async: false })
-export class IsVietnamIdCardNumberConstraint
-  implements ValidatorConstraintInterface
-{
+class IsVietnamIdCardNumberConstraint implements ValidatorConstraintInterface {
   validate(value: any): Promise<boolean> | boolean {
     if (typeof value !== 'string') {
       return false;
@@ -116,7 +114,7 @@ export class IsVietnamIdCardNumberConstraint
 }
 
 @ValidatorConstraint({ async: false })
-export class IsHexStringIdConstraint implements ValidatorConstraintInterface {
+class IsHexStringIdConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
     if (typeof value !== 'string') {
       return false;
@@ -131,9 +129,7 @@ export class IsHexStringIdConstraint implements ValidatorConstraintInterface {
 }
 
 @ValidatorConstraint({ async: false })
-export class IsStringOrNumberArrayConstraint
-  implements ValidatorConstraintInterface
-{
+class IsStringOrNumberArrayConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
     return (
       Array.isArray(value) &&
@@ -149,7 +145,7 @@ export class IsStringOrNumberArrayConstraint
 }
 
 @ValidatorConstraint({ async: false })
-export class IsPriceStringConstraint implements ValidatorConstraintInterface {
+class IsPriceStringConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
     if (typeof value !== 'string') {
       return false;
@@ -164,9 +160,7 @@ export class IsPriceStringConstraint implements ValidatorConstraintInterface {
 }
 
 @ValidatorConstraint({ async: false })
-export class IsVietnamAirportCodeConstraint
-  implements ValidatorConstraintInterface
-{
+class IsVietnamAirportCodeConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
     const airportCodeRegex = /^[A-Z]{3}$/;
     return (
