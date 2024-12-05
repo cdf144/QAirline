@@ -14,10 +14,10 @@ export class Aircraft {
   @Prop()
   totalSeat: number;
 
-  @Prop({ default: null })
+  @Prop()
   economySeat: number;
 
-  @Prop({ default: null })
+  @Prop({ default: 0 })
   businessSeat: number;
 
   @Prop({ default: new Date() })

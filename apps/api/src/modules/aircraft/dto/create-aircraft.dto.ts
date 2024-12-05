@@ -1,22 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsOptional, IsPositive, IsString, Max } from 'class-validator';
 
 export class CreateAircraftDto {
   @IsString()
-  @IsNotEmpty()
   @ApiProperty()
   manufacturer: string;
 
   @IsString()
-  @IsNotEmpty()
   @ApiProperty()
   model: string;
 
-  @IsNumber()
+  @IsPositive()
+  @Max(1000)
   @ApiProperty()
   economySeat: number;
 
-  @IsNumber()
+  @IsOptional()
+  @IsPositive()
+  @Max(1000)
   @ApiProperty({ required: false })
-  businessSeat: number;
+  businessSeat: number = 0;
 }

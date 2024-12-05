@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CreateAircraftDto } from './dto/create-aircraft.dto';
 import { Aircraft, AircraftDocument } from './schemas/aircraft.schema';
 
 @Injectable()
@@ -12,8 +13,22 @@ export class AircraftService {
   constructor(
     @InjectModel(Aircraft.name) private aircraftModel: Model<AircraftDocument>,
   ) {}
-  async createAircraft(aircraftData: Partial<Aircraft>): Promise<Aircraft> {
-    const newAircraft = new this.aircraftModel(aircraftData);
+  async createAircraft(
+    createAircraftDto: CreateAircraftDto,
+  ): Promise<Aircraft> {
+    const { economySeat, businessSeat } = createAircraftDto;
+    const totalSeat = economySeat + businessSeat;
+    if (totalSeat > 1000) {
+      throw new BadRequestException('Total seat must not exceed 1000');
+    }
+
+    const newAircraft = new this.aircraftModel({
+      manufacturer: createAircraftDto.manufacturer,
+      model: createAircraftDto.model,
+      totalSeat: totalSeat,
+      economySeat: createAircraftDto.economySeat,
+      businessSeat: createAircraftDto.businessSeat,
+    });
     return newAircraft.save();
   }
 
