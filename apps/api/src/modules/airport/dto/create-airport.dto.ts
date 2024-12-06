@@ -1,15 +1,8 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsVietnamAirportCode } from 'src/app.validators';
 
 export class CreateAirportDto {
-  @IsNumber()
-  @IsNotEmpty()
-  code: number;
-
-  @IsString()
-  @IsNotEmpty()
-  country: string;
-
-  @IsString()
-  @IsNotEmpty()
-  city: string;
+  @IsVietnamAirportCode()
+  @ApiProperty()
+  code: string;
 }

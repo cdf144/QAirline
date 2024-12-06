@@ -5,16 +5,16 @@ export type AirportDocument = HydratedDocument<Airport>;
 
 @Schema()
 export class Airport {
-  @Prop({ unique: true })
-  code: number;
+  @Prop({ unique: true, required: true })
+  code: string;
 
-  @Prop()
+  @Prop({ default: 'Vietnam' })
   country: string;
 
-  @Prop()
+  @Prop({ required: true })
   city: string;
 
-  @Prop()
+  @Prop({ default: new Date() })
   createdAt: Date;
 }
 
