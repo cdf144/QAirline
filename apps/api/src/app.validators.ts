@@ -164,13 +164,13 @@ class IsVietnamAirportCodeConstraint implements ValidatorConstraintInterface {
   validate(value: any) {
     const airportCodeRegex = /^[A-Z]{3}$/;
     return (
-      typeof value !== 'string' &&
+      typeof value === 'string' &&
       airportCodeRegex.test(value) &&
-      Object.values(vietnamAirportIataList).includes(value)
+      vietnamAirportIataList[value]
     );
   }
 
-  defaultMessage() {
-    return 'Airport code must be a 3-letter uppercase string';
+  defaultMessage(args: ValidationArguments) {
+    return `${args.property} must be a 3-letter uppercase string representing an airport code in Vietnam`;
   }
 }
