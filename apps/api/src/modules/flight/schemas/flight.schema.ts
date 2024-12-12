@@ -13,14 +13,17 @@ export enum FlightStatus {
 
 @Schema()
 export class Flight {
+  @Prop({ unique: true, required: true })
+  code: string;
+
   @Prop({ type: Types.ObjectId, ref: 'Aircraft', required: true })
-  aircraftId: number;
+  aircraftId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Airport', required: true })
-  departureAirportId: number;
+  departureAirportId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Airport', required: true })
-  destinationAirportId: number;
+  destinationAirportId: Types.ObjectId;
 
   @Prop({ required: true })
   departureTime: Date;

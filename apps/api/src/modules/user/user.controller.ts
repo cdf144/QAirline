@@ -29,4 +29,6 @@ export class UserController {
     const newUser = await this.UserService.createUser(RegisterDto);
     res.send(newUser);
   }
+
+  // TODO: Add login endpoint
 }

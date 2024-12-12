@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,6 +14,7 @@ import { FastifyReply } from 'fastify';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
 import { FlightService } from './flight.service';
+import { Flight } from './schemas/flight.schema';
 
 @ApiTags('flight')
 @Controller('v1/flight')
@@ -27,12 +29,27 @@ export class FlightController {
     res.send(flights);
   }
 
-  @Get(':id')
+  @Get(':identifier')
   async findOne(
     @Res() res: FastifyReply,
-    @Param('id') id: string,
+    @Param('identifier') identifier: string,
   ): Promise<void> {
-    const flight = await this.flightService.findOneById(id);
+    const identifierType = this.flightService.getIdentifierType(identifier);
+    let flight: Flight;
+
+    switch (identifierType) {
+      case 'mongoId':
+        flight = await this.flightService.findOneById(identifier);
+        break;
+      case 'flightCode':
+        flight = await this.flightService.findOneByCode(identifier);
+        break;
+      default:
+        throw new BadRequestException(
+          'Invalid identifier provided. Must be a valid 24-character hexadecimal string, or a valid 5-character flight code consisting of uppercase letters and digits',
+        );
+    }
+
     res.send(flight);
   }
 
@@ -45,23 +62,54 @@ export class FlightController {
     res.send(newFlight);
   }
 
-  @Patch(':id')
+  @Patch(':identifier')
   async update(
     @Res() res: FastifyReply,
-    @Param('id') id: string,
-    @Body()
-    updateFlightDto: UpdateFlightDto,
+    @Param('identifier') identifier: string,
+    @Body() updateFlightDto: UpdateFlightDto,
   ): Promise<void> {
-    const updatedFlight = await this.flightService.update(id, updateFlightDto);
+    const identifierType = this.flightService.getIdentifierType(identifier);
+    let updatedFlight: Flight;
+
+    switch (identifierType) {
+      case 'mongoId':
+        updatedFlight = await this.flightService.updateById(
+          identifier,
+          updateFlightDto,
+        );
+        break;
+      case 'flightCode':
+        updatedFlight = await this.flightService.updateByCode(
+          identifier,
+          updateFlightDto,
+        );
+        break;
+      default:
+        throw new BadRequestException('Invalid identifier provided');
+    }
+
     res.send(updatedFlight);
   }
 
-  @Delete(':id')
-  async delete(
+  @Delete(':identifier')
+  async deleteById(
     @Res() res: FastifyReply,
-    @Param('id') id: string,
+    @Param('identifier') identifier: string,
   ): Promise<void> {
-    const deletedFlight = await this.flightService.delete(id);
+    const identifierType = this.flightService.getIdentifierType(identifier);
+    let deletedFlight: Flight;
+
+    switch (identifierType) {
+      case 'mongoId':
+        deletedFlight = await this.flightService.deleteById(identifier);
+        break;
+      case 'flightCode':
+        deletedFlight = await this.flightService.deleteByCode(identifier);
+        break;
+      default:
+        throw new BadRequestException('Invalid identifier provided');
+    }
+
     res.send(deletedFlight);
   }
 }

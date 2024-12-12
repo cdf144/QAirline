@@ -21,12 +21,22 @@ export class FlightService {
   }
 
   async findOneById(id: string): Promise<Flight> {
+    return this.findOne({ _id: id });
+  }
+
+  async findOneByCode(code: string): Promise<Flight> {
+    return this.findOne({ code: code });
+  }
+
+  private async findOne(filter: any): Promise<Flight> {
     return this.flightModel
-      .findById(id)
+      .findOne(filter)
       .exec()
       .then((flight) => {
         if (!flight) {
-          throw new NotFoundException(`Flight with id '${id}' not found`);
+          throw new NotFoundException(
+            `Flight with ${filter._id ? `id '${filter._id}'` : `code '${filter.code}'`} not found`,
+          );
         }
         return flight;
       })
@@ -34,18 +44,21 @@ export class FlightService {
         if (error instanceof NotFoundException) {
           throw error;
         }
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' && filter._id) {
           throw new BadRequestException(
-            `Invalid hexstring id '${id}' provided to find flight`,
+            `Invalid hexstring id ${filter._id} provided to find flight`,
           );
         }
         console.error(error);
-        throw new InternalServerErrorException('Failed to find aircraft');
+        throw new InternalServerErrorException('Failed to find flight');
       });
   }
 
   async create(createFlightDto: CreateFlightDto) {
+    const code = await this.generateUniqueCode();
+
     const newFlight = new this.flightModel({
+      code: code,
       aircraftId: createFlightDto.aircraftId,
       departureAirportId: createFlightDto.departureAirportId,
       destinationAirportId: createFlightDto.destinationAirportId,
@@ -54,12 +67,29 @@ export class FlightService {
       status: createFlightDto.status,
       price: Types.Decimal128.fromString(createFlightDto.price),
     });
+
     return newFlight.save();
   }
 
-  async update(id: string, updateFlightDto: UpdateFlightDto) {
-    const flight = await this.findOneById(id);
+  async updateById(
+    id: string,
+    updateFlightDto: UpdateFlightDto,
+  ): Promise<Flight> {
+    return this.update({ _id: id }, updateFlightDto);
+  }
 
+  async updateByCode(
+    code: string,
+    updateFlightDto: UpdateFlightDto,
+  ): Promise<Flight> {
+    return this.update({ code: code }, updateFlightDto);
+  }
+
+  private async update(
+    filter: any,
+    updateFlightDto: UpdateFlightDto,
+  ): Promise<Flight> {
+    const flight = await this.findOne(filter);
     const { departureTime, arrivalTime, status, price } = updateFlightDto;
 
     if (departureTime) {
@@ -94,16 +124,30 @@ export class FlightService {
       flight.price = Types.Decimal128.fromString(price);
     }
 
-    return this.flightModel.findByIdAndUpdate(id, flight, { new: true }).exec();
+    return this.flightModel
+      .findOneAndUpdate(filter, flight, { new: true })
+      .exec();
   }
 
-  async delete(id: string): Promise<Flight> {
+  async deleteById(id: string): Promise<Flight> {
+    return this.delete({ _id: id });
+  }
+
+  async deleteByCode(code: string): Promise<Flight> {
+    return this.delete({ code: code });
+  }
+
+  private async delete(filter: any): Promise<Flight> {
     return this.flightModel
-      .findByIdAndDelete(id, { returnDocument: 'before' })
+      .findOneAndDelete(filter, { returnDocument: 'before' })
       .exec()
       .then((flight) => {
         if (!flight) {
-          throw new NotFoundException(`Flight with id '${id}' not found`);
+          throw new NotFoundException(
+            `Flight with ${
+              filter._id ? `id '${filter._id}'` : `code '${filter.code}'`
+            } not found`,
+          );
         }
         return flight;
       })
@@ -111,13 +155,41 @@ export class FlightService {
         if (error instanceof NotFoundException) {
           throw error;
         }
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' && filter._id) {
           throw new BadRequestException(
-            `Invalid hexstring id '${id}' provided to delete flight`,
+            `Invalid hexstring id '${filter._id}' provided to delete flight`,
           );
         }
         console.error(error);
         throw new InternalServerErrorException('Failed to delete flight');
       });
+  }
+
+  getIdentifierType(identifier: string): 'mongoId' | 'flightCode' | 'invalid' {
+    if (/^[0-9a-fA-F]{24}$/.test(identifier)) {
+      return 'mongoId';
+    } else if (/^[A-Z0-9]{5}$/.test(identifier)) {
+      return 'flightCode';
+    }
+    return 'invalid';
+  }
+
+  private async generateUniqueCode(): Promise<string> {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code: string;
+    let isUnique = false;
+
+    while (!isUnique) {
+      code = Array.from({ length: 5 }, () =>
+        characters.charAt(Math.floor(Math.random() * characters.length)),
+      ).join('');
+
+      const existingFlight = await this.flightModel.findOne({ code }).exec();
+      if (!existingFlight) {
+        isUnique = true;
+      }
+    }
+
+    return code;
   }
 }
