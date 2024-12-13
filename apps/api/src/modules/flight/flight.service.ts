@@ -56,12 +56,21 @@ export class FlightService {
 
   async create(createFlightDto: CreateFlightDto) {
     const code = await this.generateUniqueCode();
+    const aircraftObjectId = Types.ObjectId.createFromHexString(
+      createFlightDto.aircraftId,
+    );
+    const departureAirportObjectId = Types.ObjectId.createFromHexString(
+      createFlightDto.departureAirportId,
+    );
+    const destinationAirportObjectId = Types.ObjectId.createFromHexString(
+      createFlightDto.destinationAirportId,
+    );
 
     const newFlight = new this.flightModel({
       code: code,
-      aircraftId: createFlightDto.aircraftId,
-      departureAirportId: createFlightDto.departureAirportId,
-      destinationAirportId: createFlightDto.destinationAirportId,
+      aircraftId: aircraftObjectId,
+      departureAirportId: departureAirportObjectId,
+      destinationAirportId: destinationAirportObjectId,
       departureTime: createFlightDto.departureTime,
       arrivalTime: createFlightDto.arrivalTime,
       status: createFlightDto.status,
