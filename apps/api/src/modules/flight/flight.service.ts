@@ -184,7 +184,9 @@ export class FlightService {
         characters.charAt(Math.floor(Math.random() * characters.length)),
       ).join('');
 
-      const existingFlight = await this.flightModel.findOne({ code }).exec();
+      const existingFlight = await this.flightModel
+        .findOne({ code: code })
+        .exec();
       if (!existingFlight) {
         isUnique = true;
       }
