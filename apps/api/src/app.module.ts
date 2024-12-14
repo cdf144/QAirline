@@ -8,6 +8,7 @@ import { RolesGuard } from './common/roles.guard';
 import { AircraftModule } from './modules/aircraft/aircraft.module';
 import { AirportModule } from './modules/airport/airport.module';
 import { BlogModule } from './modules/blog/blog.module';
+import { BookingModule } from './modules/booking/booking.module';
 import { FlightModule } from './modules/flight/flight.module';
 import { TicketModule } from './modules/ticket/ticket.module';
 import { UserModule } from './modules/user/user.module';
@@ -24,12 +25,13 @@ import { UserModule } from './modules/user/user.module';
       inject: [ConfigService],
     }),
     AuthModule,
-    UserModule,
-    FlightModule,
-    BlogModule,
-    TicketModule,
     AircraftModule,
     AirportModule,
+    BlogModule,
+    BookingModule,
+    FlightModule,
+    TicketModule,
+    UserModule,
   ],
   controllers: [],
   providers: [
