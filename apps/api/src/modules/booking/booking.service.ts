@@ -105,7 +105,7 @@ export class BookingService {
     if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
       return 'mongoId';
     }
-    if (identifier.match(/^[A-Z0-9]{6}$/)) {
+    if (identifier.match(/^[A-Z0-9]{8}$/)) {
       return 'bookingCode';
     }
     return 'invalid';
@@ -120,7 +120,7 @@ export class BookingService {
 
     while (true) {
       const codes = Array.from({ length: batchSize }, () =>
-        Array.from({ length: 6 }, () =>
+        Array.from({ length: 8 }, () =>
           characters.charAt(Math.floor(Math.random() * characters.length)),
         ).join(''),
       );

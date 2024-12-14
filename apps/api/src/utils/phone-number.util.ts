@@ -11,6 +11,5 @@ export function normalizePhoneNumber(
   if (phoneNumber && phoneNumber.isValid()) {
     return phoneNumber.number; // E.164 format
   }
-  // throw new Error('Invalid phone number');
-  return '';
+  throw new Error('Invalid phone number');
 }

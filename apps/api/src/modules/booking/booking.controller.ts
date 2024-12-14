@@ -15,7 +15,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { Booking } from './schemas/booking.schema';
 
 const INVALID_IDENTIFIER_MESSAGE =
-  'Invalid identifier provided. Must be a valid 24-character hexadecimal string, or a valid 6-character booking code consisting of uppercase letters and digits';
+  'Invalid identifier provided. Must be a valid 24-character hexadecimal string, or a valid 8-character booking code consisting of uppercase letters and digits';
 
 @ApiTags('booking')
 @Controller('v1/booking')
