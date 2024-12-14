@@ -31,4 +31,6 @@ export class UserController {
   }
 
   // TODO: Add login endpoint
+  // TODO: Add find by email endpoint
+  // TODO: Add find user's tickets endpoint
 }

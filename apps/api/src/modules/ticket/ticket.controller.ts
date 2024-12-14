@@ -4,46 +4,60 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Query,
+  Res,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+import { FastifyReply } from 'fastify';
 import { CreateTicketDto } from './dto/create-ticket.dto';
-import { Ticket } from './schemas/ticket.schema';
+import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { TicketService } from './ticket.service';
 
-@Controller('tickets')
+@ApiTags('ticket')
+@Controller('v1/ticket')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
-  //create a new ticket but not confirmed yet.
-  @Post('create')
-  async createTicket(
+  @Post()
+  async create(
+    @Res() res: FastifyReply,
     @Body() createTicketDto: CreateTicketDto,
-  ): Promise<{ message: string }> {
-    await this.ticketService.createTicket(createTicketDto);
-    return { message: 'Ticket created successfully' };
+  ): Promise<void> {
+    const newTicket = await this.ticketService.create(createTicketDto);
+    res.send(newTicket);
   }
 
   @Get()
-  async getAllTickets(
-    @Query('userEmail') userEmail: string,
-  ): Promise<Ticket[]> {
-    return this.ticketService.getAllTickets(userEmail);
+  async findAll(@Res() res: FastifyReply): Promise<void> {
+    const tickets = await this.ticketService.findAll();
+    res.send(tickets);
   }
 
   @Get(':id')
-  async getTicketById(
+  async findOne(
+    @Res() res: FastifyReply,
     @Param('id') id: string,
-    @Query('userEmail') userEmail: string,
-  ): Promise<Ticket> {
-    return this.ticketService.getTicketById(id, userEmail);
+  ): Promise<void> {
+    const ticket = await this.ticketService.findOne(id);
+    res.send(ticket);
   }
 
-  //Huỷ vé
-  @Delete(':id')
-  async cancelTicket(
-    @Query('userEmail') userEmail: string,
+  @Patch(':id')
+  async update(
+    @Res() res: FastifyReply,
     @Param('id') id: string,
-  ): Promise<{ message: string }> {
-    return this.ticketService.cancelTicket(id, userEmail);
+    @Body() updateTicketDto: UpdateTicketDto,
+  ): Promise<void> {
+    const updatedTicket = await this.ticketService.update(id, updateTicketDto);
+    res.send(updatedTicket);
+  }
+
+  @Delete(':id')
+  async delete(
+    @Res() res: FastifyReply,
+    @Param('id') id: string,
+  ): Promise<void> {
+    const deletedTicket = await this.ticketService.delete(id);
+    res.send(deletedTicket);
   }
 }

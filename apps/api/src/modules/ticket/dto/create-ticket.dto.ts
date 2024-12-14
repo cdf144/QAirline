@@ -1,38 +1,37 @@
-import {
-  IsDateString,
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-} from 'class-validator';
-import { ClassType, TripType } from '../schemas/ticket.schema';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsHexStringId, IsPriceString } from 'src/app.validators';
+import { TicketStatus, TripType } from '../schemas/ticket.schema';
 
 export class CreateTicketDto {
+  @IsHexStringId()
+  @ApiProperty()
+  bookingId: string;
+
   @IsEnum(TripType)
-  @IsNotEmpty()
+  @ApiProperty({ enum: TripType })
   tripType: TripType;
 
-  @IsNotEmpty()
-  @IsEmail()
-  userEmail: string;
+  @IsHexStringId()
+  @ApiProperty()
+  outboundFlightId: string;
 
-  @IsNumber()
-  @IsNotEmpty()
-  outBoundFlightId: number;
+  @IsOptional()
+  @IsHexStringId()
+  @ApiProperty({ required: false })
+  returnFlightId?: string;
 
-  @IsNumber()
-  returnFlightId: number;
-
+  // TODO: Consensus on seat format and validation
   @IsString()
+  @ApiProperty()
   seat: string;
 
-  @IsNumber()
-  totalPrice: number;
+  @IsOptional()
+  @IsEnum(TicketStatus)
+  @ApiProperty({ enum: TicketStatus, required: false })
+  status?: TicketStatus;
 
-  @IsDateString()
-  departureTime: Date;
-
-  @IsEnum(ClassType)
-  classType: ClassType;
+  @IsPriceString()
+  @ApiProperty()
+  totalPrice: string;
 }

@@ -3,17 +3,12 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type TicketDocument = HydratedDocument<Ticket>;
 
-export enum ClassType {
-  Economy = 'economy',
-  Business = 'business',
-}
-
 export enum TripType {
   OneWay = 'oneway',
   RoundTrip = 'roundtrip',
 }
 
-export enum Status {
+export enum TicketStatus {
   Pending = 'pending',
   Confirmed = 'confirmed',
   Cancelled = 'cancelled',
@@ -22,40 +17,28 @@ export enum Status {
 
 @Schema()
 export class Ticket {
-  @Prop()
-  bookingId: number;
+  @Prop({ type: Types.ObjectId, ref: 'Booking', required: true })
+  bookingId: Types.ObjectId;
 
-  @Prop({ enum: TripType })
+  @Prop({ enum: TripType, default: TripType.OneWay })
   tripType: TripType;
 
-  @Prop()
-  userEmail: string;
+  @Prop({ type: Types.ObjectId, ref: 'Flight', required: true })
+  outboundFlightId: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Flight', default: null })
-  outBoundFlightId: number;
+  returnFlightId: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Flight', default: null })
-  returnFlightId: number;
-
-  @Prop()
+  @Prop({ required: true })
   seat: string;
 
-  @Prop({ enum: Status })
-  status: Status;
+  @Prop({ enum: TicketStatus, default: TicketStatus.Pending })
+  status: TicketStatus;
 
-  @Prop()
-  totalPrice: number;
+  @Prop({ type: Types.Decimal128, required: true })
+  totalPrice: Types.Decimal128;
 
-  @Prop()
-  bookTime: Date;
-
-  @Prop()
-  departureTime: Date;
-
-  @Prop()
-  classType: ClassType;
-
-  @Prop()
+  @Prop({ default: new Date() })
   createdAt: Date;
 }
 
