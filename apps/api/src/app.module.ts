@@ -2,9 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
-
 import { AuthModule } from './auth/auth.module';
-import { RolesGuard } from './common/roles.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 import { AircraftModule } from './modules/aircraft/aircraft.module';
 import { AirportModule } from './modules/airport/airport.module';
 import { BlogModule } from './modules/blog/blog.module';

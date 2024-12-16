@@ -5,7 +5,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { vietnamAirportIataList } from './common/vietnam-airport-iata.list';
+import { vietnamAirportIataList } from './common/lists/vietnam-airport-iata.list';
 
 /**
  * **Custom Validator**

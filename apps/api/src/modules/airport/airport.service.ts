@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { vietnamAirportIataList } from 'src/common/vietnam-airport-iata.list';
+import { vietnamAirportIataList } from 'src/common/lists/vietnam-airport-iata.list';
 import { CreateAirportDto } from './dto/create-airport.dto';
 import { Airport, AirportDocument } from './schemas/airport.schema';
 
