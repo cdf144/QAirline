@@ -5,7 +5,7 @@ export const BookingPageAfterClickInRecommend: React.FC = () => {
     <div
       className="flex justify-center items-center w-screen h-screen bg-cover bg-center"
       style={{
-        backgroundImage: "url('/src/assets/Ban_sao_PLANE.jpg')",
+        backgroundImage: "url('/src/assets/Bookingbg.jpg')",
       }}
     >
       {/* Container for the form */}

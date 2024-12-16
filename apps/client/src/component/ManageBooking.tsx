@@ -5,7 +5,7 @@ export const ManageBooking: React.FC = () => {
     <div
       className="flex justify-center items-center w-screen h-screen bg-cover bg-center"
       style={{
-        backgroundImage: "url('/src/assets/Ban_sao_PLANE.jpg')",
+        backgroundImage: "url('/src/assets/bookingbg.jpg')",
       }}
     >
       <div className="bg-white shadow-md rounded-lg p-6 w-[90%] max-w-3xl mt-[100px]">
@@ -52,9 +52,9 @@ export const ManageBooking: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="absolute left-1/2 bottom-10 w-[1000px] h-10 transform -translate-x-1/2 p-4 bg-gray-100 text-black text-lg w-[1000px] text-left pl-12 flex items-center rounded-lg shadow bg-[url('/src/assets/News_Background.png')] bg-cover bg-center">
+      <div className="absolute left-1/2 bottom-10 w-[1000px] h-10 transform -translate-x-1/2 p-4 bg-gray-100 text-black text-lg w-[1000px] text-left pl-12 flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
         <img
-          src="/src/assets/documenticon.png"
+          src="/src/assets/docuicon.png"
           alt="News icon"
           className="h-5 w-5"
         />

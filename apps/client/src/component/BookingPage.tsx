@@ -5,14 +5,14 @@ export const BookingPage: React.FC = () => {
     <div
       className="flex flex-col w-screen h-full relative h-screen bg-cover bg-center"
       style={{
-        backgroundImage: "url('/src/assets/Ban_sao_PLANE.jpg')",
+        backgroundImage: "url('/src/assets/bookingbg.jpg')",
       }}
     >
       {/* Search Box */}
       <div
         className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg shadow-lg w-[800px] p-8 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/src/assets/Booking_background.png')",
+          backgroundImage: "url('/src/assets/Booking_bg.png')",
         }}
       >
         {/* Tabs */}
@@ -129,9 +129,9 @@ export const BookingPage: React.FC = () => {
       </div>
 
       {/* News Section */}
-      <div className="absolute left-1/2 bottom-10 w-[1000px] h-10 transform -translate-x-1/2 p-4 bg-gray-100 text-black text-lg w-[1000px] text-left pl-12 flex items-center rounded-lg shadow bg-[url('/src/assets/News_Background.png')] bg-cover bg-center">
+      <div className="absolute left-1/2 bottom-10 w-[1000px] h-10 transform -translate-x-1/2 p-4 bg-gray-100 text-black text-lg w-[1000px] text-left pl-12 flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
         <img
-          src="/src/assets/documenticon.png"
+          src="/src/assets/docuicon.png"
           alt="News icon"
           className="h-5 w-5"
         />

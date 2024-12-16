@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export const HomePage: React.FC = () => {
   return (
@@ -7,7 +8,7 @@ export const HomePage: React.FC = () => {
       <div
         className="relative h-screen bg-cover bg-center"
         style={{
-          backgroundImage: "url('/src/assets/background1.png')",
+          backgroundImage: "url('/src/assets/homebg.png')",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
@@ -15,12 +16,16 @@ export const HomePage: React.FC = () => {
       >
         {/* Header */}
         <div className="absolute top-0 right-0 flex p-6 space-x-4">
-          <button className="px-6 py-2 w-40 bg-[#1B304F] text-white rounded-full border-white">
-            Login
-          </button>
-          <button className="px-6 py-2 w-40 bg-white text-[#1B304F] rounded-full border-blue-800">
-            Sign Up
-          </button>
+          <Link to="/login">
+            <button className="px-6 py-2 w-40 bg-[#1B304F] text-white rounded-full border-white">
+              Login
+            </button>
+          </Link>
+          <Link to="/signUP" className="text-white no-underline">
+            <button className="px-6 py-2 w-40 bg-white text-[#1B304F] rounded-full border-blue-800">
+              Sign Up
+            </button>
+          </Link>
         </div>
 
         {/* Hero Content */}
@@ -41,19 +46,23 @@ export const HomePage: React.FC = () => {
 
           {/* Buttons */}
           <div className="flex space-x-5 temt-100px">
-            <button className="px-6 py-2 w-[300px] h-[60px] ml-[50px] mt-[100px] bg-[#1B304F] text-white text-[30px] rounded-full shadow hover:bg-opacity-90 border-white">
-              Booking
-            </button>
-            <button className="px-6 py-2 w-[300px] h-[60px] ml-[50px] mt-[100px] bg-white text-[#1B304F] text-[30px] rounded-full shadow hover:bg-opacity-90 border-blue-800">
-              Manager Booking
-            </button>
+            <Link to="/booking" className="text-white no-underline">
+              <button className="px-6 py-2 w-[300px] h-[60px] ml-[50px] mt-[100px] bg-[#1B304F] text-white text-[30px] rounded-full shadow hover:bg-opacity-90 border-white">
+                Booking
+              </button>
+            </Link>
+            <Link to="/manage" className="text-white no-underline">
+              <button className="px-6 py-2 w-[300px] h-[60px] ml-[50px] mt-[100px] bg-white text-[#1B304F] text-[30px] rounded-full shadow hover:bg-opacity-90 border-blue-800">
+                Manager Booking
+              </button>
+            </Link>
           </div>
 
           {/* News Section (moved inside main div) */}
           <div
             className="mt-[100px] mx-auto p-4 bg-gray-100 text-black text-lg w-[1000px] h-[40px] text-left pl-10 flex items-center bg-cover bg-center rounded-lg"
             style={{
-              backgroundImage: "url('/src/assets/News_background.png')",
+              backgroundImage: "url('/src/assets/News_bg.png')",
             }}
           >
             <img
