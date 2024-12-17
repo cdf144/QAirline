@@ -16,6 +16,9 @@ import { UpdateFlightDto } from './dto/update-flight.dto';
 import { FlightService } from './flight.service';
 import { Flight } from './schemas/flight.schema';
 
+const INVALID_IDENTIFIER_MESSAGE =
+  'Invalid identifier provided. Must be a valid 24-character hexadecimal string, or a valid 5-character flight code consisting of uppercase letters and digits';
+
 @ApiTags('flight')
 @Controller('v1/flight')
 export class FlightController {
@@ -45,9 +48,7 @@ export class FlightController {
         flight = await this.flightService.findOneByCode(identifier);
         break;
       default:
-        throw new BadRequestException(
-          'Invalid identifier provided. Must be a valid 24-character hexadecimal string, or a valid 5-character flight code consisting of uppercase letters and digits',
-        );
+        throw new BadRequestException(INVALID_IDENTIFIER_MESSAGE);
     }
 
     res.send(flight);
@@ -85,7 +86,7 @@ export class FlightController {
         );
         break;
       default:
-        throw new BadRequestException('Invalid identifier provided');
+        throw new BadRequestException(INVALID_IDENTIFIER_MESSAGE);
     }
 
     res.send(updatedFlight);
@@ -107,7 +108,7 @@ export class FlightController {
         deletedFlight = await this.flightService.deleteByCode(identifier);
         break;
       default:
-        throw new BadRequestException('Invalid identifier provided');
+        throw new BadRequestException(INVALID_IDENTIFIER_MESSAGE);
     }
 
     res.send(deletedFlight);

@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { FilterQuery, Model, Types } from 'mongoose';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
 import { Flight, FlightDocument } from './schemas/flight.schema';
@@ -41,14 +41,7 @@ export class FlightService {
         return flight;
       })
       .catch((error) => {
-        if (error instanceof NotFoundException) {
-          throw error;
-        }
-        if (error.name === 'CastError' && filter._id) {
-          throw new BadRequestException(
-            `Invalid hexstring id ${filter._id} provided to find flight`,
-          );
-        }
+        this.handleFindErrors(error, filter);
         console.error(error);
         throw new InternalServerErrorException('Failed to find flight');
       });
@@ -95,42 +88,47 @@ export class FlightService {
   }
 
   private async update(
-    filter: any,
+    filter: FilterQuery<FlightDocument>,
     updateFlightDto: UpdateFlightDto,
   ): Promise<Flight> {
     const flight = await this.findOne(filter);
-    const { departureTime, arrivalTime, status, price } = updateFlightDto;
+    const {
+      departureTime: newDepartureTime,
+      arrivalTime: newArrivalTime,
+      status: newStatus,
+      price: newPrice,
+    } = updateFlightDto;
 
-    if (departureTime) {
-      const newDepartureTime = new Date(departureTime);
-      if (arrivalTime && newDepartureTime > new Date(arrivalTime)) {
+    if (newDepartureTime) {
+      const parsedNewDepartureTime = new Date(newDepartureTime);
+      if (newArrivalTime && parsedNewDepartureTime > new Date(newArrivalTime)) {
         throw new BadRequestException(
           'New departure time cannot be later than new arrival time',
         );
-      } else if (newDepartureTime > flight.arrivalTime) {
+      } else if (parsedNewDepartureTime > flight.arrivalTime) {
         throw new BadRequestException(
           'New departure time cannot be later than old arrival time',
         );
       }
-      flight.departureTime = newDepartureTime;
+      flight.departureTime = parsedNewDepartureTime;
     }
 
-    if (arrivalTime) {
-      const newArrivalTime = new Date(arrivalTime);
-      if (newArrivalTime < flight.departureTime) {
+    if (newArrivalTime) {
+      const parsedNewArrivalTime = new Date(newArrivalTime);
+      if (parsedNewArrivalTime < flight.departureTime) {
         throw new BadRequestException(
           `New arrival time cannot be earlier than old departure time`,
         );
       }
-      flight.arrivalTime = newArrivalTime;
+      flight.arrivalTime = parsedNewArrivalTime;
     }
 
-    if (status) {
-      flight.status = status;
+    if (newStatus) {
+      flight.status = newStatus;
     }
 
-    if (price) {
-      flight.price = Types.Decimal128.fromString(price);
+    if (newPrice) {
+      flight.price = Types.Decimal128.fromString(newPrice);
     }
 
     return this.flightModel
@@ -146,7 +144,7 @@ export class FlightService {
     return this.delete({ code: code });
   }
 
-  private async delete(filter: any): Promise<Flight> {
+  private async delete(filter: FilterQuery<FlightDocument>): Promise<Flight> {
     return this.flightModel
       .findOneAndDelete(filter, { returnDocument: 'before' })
       .exec()
@@ -161,14 +159,7 @@ export class FlightService {
         return flight;
       })
       .catch((error) => {
-        if (error instanceof NotFoundException) {
-          throw error;
-        }
-        if (error.name === 'CastError' && filter._id) {
-          throw new BadRequestException(
-            `Invalid hexstring id '${filter._id}' provided to delete flight`,
-          );
-        }
+        this.handleFindErrors(error, filter);
         console.error(error);
         throw new InternalServerErrorException('Failed to delete flight');
       });
@@ -181,6 +172,25 @@ export class FlightService {
       return 'flightCode';
     }
     return 'invalid';
+  }
+
+  /**
+   * Handles common errors that occur during the find operation for flights.
+   *
+   * @param error - The error that was thrown during the find operation.
+   * @param filter - An optional filter query used to find the flight document.
+   * @throws NotFoundException - If the error is an instance of NotFoundException.
+   * @throws BadRequestException - If the error is a CastError and the filter contains an invalid hexstring id.
+   */
+  private handleFindErrors(error: Error, filter?: FilterQuery<FlightDocument>) {
+    if (error instanceof NotFoundException) {
+      throw error;
+    }
+    if (error.name === 'CastError' && filter?._id) {
+      throw new BadRequestException(
+        `Invalid hexstring id ${filter._id} provided to find flight`,
+      );
+    }
   }
 
   private async generateUniqueCode(): Promise<string> {
