@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 import { IsVietnamIdCardNumber } from 'src/app.validators';
 import { Gender } from '../schemas/user.schema';
 
@@ -19,16 +25,17 @@ export class RegisterUserDto {
   readonly fullName?: string;
 
   @IsOptional()
+  @IsEnum(Gender)
   @ApiProperty({ enum: Gender, required: false })
-  readonly sex: Gender;
+  readonly sex?: Gender;
 
   @IsOptional()
   @IsPhoneNumber('VN')
   @ApiProperty({ required: false })
-  readonly phone: string;
+  readonly phone?: string;
 
   @IsOptional()
   @IsVietnamIdCardNumber()
   @ApiProperty({ required: false })
-  readonly idCardNumber: string;
+  readonly idCardNumber?: string;
 }
