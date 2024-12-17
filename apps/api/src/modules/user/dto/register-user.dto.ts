@@ -3,7 +3,7 @@ import { IsEmail, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 import { IsVietnamIdCardNumber } from 'src/app.validators';
 import { Gender } from '../schemas/user.schema';
 
-export class RegisterDto {
+export class RegisterUserDto {
   @IsEmail()
   @ApiProperty()
   readonly email: string;

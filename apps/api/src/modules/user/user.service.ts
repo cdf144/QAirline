@@ -2,58 +2,211 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isEmail, isPhoneNumber } from 'class-validator';
+import { FilterQuery, Model } from 'mongoose';
 import { normalizePhoneNumber } from 'src/utils/phone-number.util';
-import { RegisterDto } from './dto/register.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async findUserByEmail(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email: email }).exec();
+  async findAll(): Promise<User[]> {
+    return this.userModel.find().exec();
   }
 
-  async createUser(registerDto: RegisterDto): Promise<User> {
-    const { email, phone, idCardNumber } = registerDto;
-    const normalizedPhone = normalizePhoneNumber(phone);
-    return this.userModel
-      .findOne({
-        $or: [{ email }, { phone: normalizedPhone }, { idCardNumber }],
-      })
-      .exec()
-      .then((existingUser) => {
-        if (existingUser) {
-          if (existingUser.email === email) {
-            throw new BadRequestException('Email already in use');
-          }
-          if (existingUser.phone === normalizedPhone) {
-            throw new BadRequestException('Phone already in use');
-          }
-          if (existingUser.idCardNumber === idCardNumber) {
-            throw new BadRequestException('ID card number already in use');
-          }
-        }
+  async findOneById(id: string): Promise<User> {
+    return this.findOne({ _id: id });
+  }
 
-        const newUser = new this.userModel({
-          email: registerDto.email,
-          password: registerDto.password,
-          fullName: registerDto.fullName,
-          sex: registerDto.sex,
-          phone: normalizedPhone,
-          idCardNumber: registerDto.idCardNumber,
-        });
-        return newUser.save();
+  async findOneByEmail(email: string): Promise<User> {
+    return this.findOne({ email: email });
+  }
+
+  private async findOne(filter: FilterQuery<UserDocument>): Promise<User> {
+    return this.userModel
+      .findOne(filter)
+      .exec()
+      .then((user) => {
+        if (!user) {
+          throw new NotFoundException(
+            'User with the provided identifier not found',
+          );
+        }
+        return user;
       })
       .catch((error) => {
-        if (error instanceof BadRequestException) {
-          throw error;
-        }
+        this.handleFindErrors(error, filter);
         console.error(error);
-        throw new InternalServerErrorException('Failed to create user');
+        throw new InternalServerErrorException('Failed to find user');
       });
+  }
+
+  async create(registerUserDto: RegisterUserDto): Promise<User> {
+    const {
+      email: regEmail,
+      phone: regPhone,
+      idCardNumber: regIdCardNumber,
+    } = registerUserDto;
+    const normalizedRegPhone = normalizePhoneNumber(regPhone);
+
+    try {
+      const existingUser = await this.userModel.findOne({
+        $or: [
+          { email: regEmail },
+          { phone: normalizedRegPhone },
+          { idCardNumber: regIdCardNumber },
+        ],
+      });
+      if (existingUser) {
+        throw new BadRequestException(
+          'Email, phone, or ID card number already in use',
+        );
+      }
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      console.error(error);
+      throw new InternalServerErrorException('Failed to create user');
+    }
+
+    const newUser = new this.userModel({
+      email: registerUserDto.email,
+      password: registerUserDto.password,
+      fullName: registerUserDto.fullName,
+      sex: registerUserDto.sex,
+      phone: normalizedRegPhone,
+      idCardNumber: registerUserDto.idCardNumber,
+    });
+    return newUser.save();
+  }
+
+  async updateById(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    return this.update({ _id: id }, updateUserDto);
+  }
+
+  async updateByEmail(
+    email: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    return this.update({ email: email }, updateUserDto);
+  }
+
+  private async update(
+    filter: FilterQuery<UserDocument>,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    const user = await this.findOne(filter);
+    const {
+      email: newEmail,
+      password: newPassword,
+      fullName: newFullName,
+      sex: newSex,
+      phone: newPhone,
+      idCardNumber: newIdCardNumber,
+    } = updateUserDto;
+
+    // Data already validated in DTO
+    if (newEmail) {
+      user.email = newEmail;
+    }
+    if (newPassword) {
+      user.password = newPassword;
+    }
+    if (newFullName) {
+      user.fullName = newFullName;
+    }
+    if (newSex) {
+      user.sex = newSex;
+    }
+    if (newPhone) {
+      user.phone = normalizePhoneNumber(newPhone);
+    }
+    if (newIdCardNumber) {
+      user.idCardNumber = newIdCardNumber;
+    }
+
+    return this.userModel.findOneAndUpdate(filter, user, { new: true }).exec();
+  }
+
+  async deleteById(id: string): Promise<User> {
+    return this.delete({ _id: id });
+  }
+
+  async deleteByEmail(email: string): Promise<User> {
+    return this.delete({ email: email });
+  }
+
+  private async delete(filter: FilterQuery<UserDocument>): Promise<User> {
+    return this.userModel
+      .findOneAndDelete(filter, { returnDocument: 'before' })
+      .exec()
+      .then((user) => {
+        if (!user) {
+          throw new NotFoundException(
+            'User with the provided identifier not found',
+          );
+        }
+        return user;
+      })
+      .catch((error: Error) => {
+        this.handleFindErrors(error, filter);
+        console.error(error);
+        throw new InternalServerErrorException('Failed to delete user');
+      });
+  }
+
+  /**
+   * Handles common errors that occur during user find operations.
+   *
+   * @param error - The error that was thrown during the find operation.
+   * @param filter - An optional filter query used to find the user.
+   * @throws NotFoundException - If the error is an instance of NotFoundException.
+   * @throws BadRequestException - If the error is a CastError and the filter contains an invalid hexstring id.
+   */
+  private handleFindErrors(error: Error, filter?: FilterQuery<UserDocument>) {
+    if (error instanceof NotFoundException) {
+      throw error;
+    }
+    if (error.name === 'CastError' && filter?._id) {
+      throw new BadRequestException(
+        `Invalid hexstring id ${filter._id} provided to find user`,
+      );
+    }
+  }
+
+  /**
+   * Determines the type of identifier provided.
+   *
+   * @param identifier - The identifier string to be evaluated.
+   * @returns A string indicating the type of the identifier. Possible values are:
+   * - 'mongoId': If the identifier matches a 24-character hexadecimal string.
+   * - 'email': If the identifier contains an '@' symbol.
+   * - 'phone': If the identifier is a 10 or 11 digit number.
+   * - 'idCardNumber': If the identifier is a 12 digit number.
+   * - 'invalid': If the identifier does not match any of the above patterns.
+   */
+  getIdentifierType(
+    identifier: string,
+  ): 'mongoId' | 'email' | 'phone' | 'idCardNumber' | 'invalid' {
+    if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
+      return 'mongoId';
+    }
+    if (isEmail(identifier)) {
+      return 'email';
+    }
+    if (isPhoneNumber(identifier, 'VN')) {
+      return 'phone';
+    }
+    if (identifier.match(/^\d{12}$/)) {
+      return 'idCardNumber';
+    }
+    return 'invalid';
   }
 }
