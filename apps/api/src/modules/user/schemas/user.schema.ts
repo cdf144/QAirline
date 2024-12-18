@@ -24,10 +24,10 @@ export class User {
   @Prop({ enum: Gender })
   sex: Gender;
 
-  @Prop({ unique: true })
+  @Prop({ unique: true, sparse: true })
   phone: string;
 
-  @Prop({ unique: true })
+  @Prop({ unique: true, sparse: true })
   idCardNumber: string;
 
   @Prop({ default: new Date() })
