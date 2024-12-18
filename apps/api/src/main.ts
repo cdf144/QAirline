@@ -6,10 +6,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
-
-dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -18,11 +15,6 @@ async function bootstrap() {
   );
   const configService = app.get(ConfigService);
 
-  const config = new DocumentBuilder()
-    .setTitle('QAirline API')
-    .setDescription('API documentation for QAirline')
-    .setVersion('1.0')
-    .build();
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -30,6 +22,12 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const config = new DocumentBuilder()
+    .setTitle('QAirline API')
+    .setDescription('API documentation for QAirline')
+    .setVersion('1.0')
+    .build();
   SwaggerModule.setup('api', app, () =>
     SwaggerModule.createDocument(app, config),
   );
