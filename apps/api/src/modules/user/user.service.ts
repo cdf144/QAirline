@@ -53,15 +53,27 @@ export class UserService {
       phone: regPhone,
       idCardNumber: regIdCardNumber,
     } = registerUserDto;
-    const normalizedRegPhone = normalizePhoneNumber(regPhone);
+
+    let normalizedRegPhone = undefined;
+    if (regPhone) {
+      normalizedRegPhone = normalizePhoneNumber(regPhone);
+    }
+
+    // Prevent Mongoose from returning an arbitrary user when one condition has 'undefined' value
+    const orFilterConditions = [];
+    if (regEmail) {
+      orFilterConditions.push({ email: regEmail });
+    }
+    if (normalizedRegPhone) {
+      orFilterConditions.push({ phone: normalizedRegPhone });
+    }
+    if (regIdCardNumber) {
+      orFilterConditions.push({ idCardNumber: regIdCardNumber });
+    }
 
     try {
-      const existingUser = await this.userModel.findOne({
-        $or: [
-          { email: regEmail },
-          { phone: normalizedRegPhone },
-          { idCardNumber: regIdCardNumber },
-        ],
+      const existingUser = await this.findOne({
+        $or: orFilterConditions,
       });
       if (existingUser) {
         throw new BadRequestException(
