@@ -20,24 +20,21 @@ export class UserService {
     return this.userModel.find().exec();
   }
 
-  async findOneById(id: string): Promise<User> {
+  async findOneById(id: string): Promise<User | null> {
     return this.findOne({ _id: id });
   }
 
-  async findOneByEmail(email: string): Promise<User> {
+  async findOneByEmail(email: string): Promise<User | null> {
     return this.findOne({ email: email });
   }
 
-  private async findOne(filter: FilterQuery<UserDocument>): Promise<User> {
+  private async findOne(
+    filter: FilterQuery<UserDocument>,
+  ): Promise<User | null> {
     return this.userModel
       .findOne(filter)
       .exec()
       .then((user) => {
-        if (!user) {
-          throw new NotFoundException(
-            'User with the provided identifier not found',
-          );
-        }
         return user;
       })
       .catch((error) => {
