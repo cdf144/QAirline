@@ -1,7 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { LoginResult } from 'src/common/interfaces/login-result.interface';
+import { User } from 'src/modules/user/schemas/user.schema';
 import { UserService } from 'src/modules/user/user.service';
-import { SignInDto } from './dto/signin.dto';
 
 @Injectable()
 export class AuthService {
@@ -9,15 +10,24 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
-  async signIn(signInDto: SignInDto): Promise<{ access_token: string }> {
-    const { email, password } = signInDto;
-    const user = await this.userService.findUserByEmail(email);
-    if (user?.password != password) {
-      throw new UnauthorizedException();
+
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<Omit<User, 'password'> | null> {
+    const foundUser = await this.userService.findOneByEmail(email);
+    if (foundUser && foundUser.password === password) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...result } = foundUser;
+      return result;
     }
-    const payload = { email: user.email, password: password };
+    return null;
+  }
+
+  login(user: Omit<User, 'password'>): LoginResult {
+    const payload = { email: user.email, sub: user._id };
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 }

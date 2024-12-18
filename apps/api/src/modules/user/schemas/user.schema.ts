@@ -12,6 +12,9 @@ export enum Gender {
 
 @Schema()
 export class User {
+  _id: string;
+  __v: number;
+
   @Prop({ unique: true, required: true })
   email: string;
 
