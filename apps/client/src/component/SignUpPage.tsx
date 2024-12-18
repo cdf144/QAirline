@@ -1,32 +1,33 @@
-import * as React from "react";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 
 export const SignUpPage: React.FC = () => {
   return (
     <div
-      className="flex justify-center items-center w-screen h-screen bg-cover bg-center"
+      className="flex flex-col justify-center items-center w-screen min-h-screen bg-cover bg-center px-4"
       style={{
         backgroundImage: "url('src/assets/bookingbg.jpg')",
       }}
     >
       {/* Header */}
       <div
-        className="w-[600px] h-[470px] mt-10 shadow-md rounded-lg flex flex-col pt-10 bg-white bg-cover bg-center"
+        className="w-full max-w-[600px] lg:h-[550px] lg:mt-[150px] shadow-md rounded-lg flex flex-col pt-10 bg-white bg-cover bg-center"
         style={{
           backgroundImage: "url('/src/assets/Booking_bg.png')",
         }}
       >
-        <div className="px-6 py-6 ">
+        <div className="px-6 py-6">
           {/* Navigation Buttons */}
           <SelectButton />
 
           {/* Login Form */}
-          <h2 className="mb-4 text-xl font-bold text-gray-700">Sign Up</h2>
+          <h2 className="mb-4 text-lg lg:text-xl font-bold text-gray-700">
+            SIGN UP
+          </h2>
           <form className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-600">
-                Member number/email/phone
+                Member number or email or phone
               </label>
               <input
                 type="text"
@@ -58,26 +59,28 @@ export const SignUpPage: React.FC = () => {
                 />
               </div>
             </div>
-
-            <div className="flex justify-end space-x-2 text-black">
+            <div className="flex justify-end space-x-2 text-black text-sm lg:text-base">
               <Link to="/login" className="text-white no-underline">
                 <a href="#" className="hover:underline text-black">
                   Login
                 </a>
               </Link>
               <span>|</span>
-              <a href="#" className="hover:underline text-black">
-                Forgot your password
-              </a>
+              <Link to="/forgotPassword" className="text-white no-underline">
+                <a href="#" className="hover:underline text-black">
+                  Forgot your password
+                </a>
+              </Link>
             </div>
-
-            <button className="w-full py-2 mt-4 text-black text-xl bg-yellow-500 rounded hover:bg-yellow-600">
-              SIGN UP
+            <button className="w-full py-2 mt-4 text-black text-lg lg:text-xl bg-yellow-500 rounded hover:bg-yellow-600">
+              LOGIN
             </button>
           </form>
         </div>
       </div>
-      <div className="absolute left-1/2 bottom-10 w-[1000px] h-10 transform -translate-x-1/2 p-4 bg-gray-100 text-black text-lg w-[1000px] text-left pl-12 flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
+
+      {/* News Section */}
+      <div className="mt-[45px] h-10 w-full max-w-[1000px] p-4 bg-gray-100 text-black text-lg text-left flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
         <img
           src="/src/assets/docuicon.png"
           alt="News icon"
@@ -91,19 +94,18 @@ export const SignUpPage: React.FC = () => {
     </div>
   );
 };
-
 export const SelectButton: React.FC = () => {
   const bookingButton = useRef<HTMLButtonElement | null>(null);
   const manageButton = useRef<HTMLButtonElement | null>(null);
 
   const handleButtonClick = (buttonName: string) => {
-    // Đặt lại trạng thái của các nút
+    // Reset button states
     if (bookingButton.current)
       bookingButton.current.classList.remove("bg-[#1B304F]", "text-white");
     if (manageButton.current)
       manageButton.current.classList.remove("bg-[#1B304F]", "text-white");
 
-    // Thêm trạng thái được chọn
+    // Add selected state
     if (buttonName === "Booking" && bookingButton.current) {
       bookingButton.current.classList.add("bg-[#1B304F]", "text-white");
     } else if (buttonName === "Manage" && manageButton.current) {
@@ -112,11 +114,11 @@ export const SelectButton: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center space-x-8 mb-6">
+    <div className="flex flex-col lg:flex-row justify-center space-y-4 lg:space-y-0 lg:space-x-8 mb-6">
       <Link to="/booking" className="text-white no-underline">
         <button
           ref={bookingButton}
-          className="w-[250px] h-[60px] text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white focus:bg-[#1B304F] focus:text-white"
+          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white focus:bg-[#1B304F] focus:text-white"
           onClick={() => handleButtonClick("Booking")}
         >
           Booking
@@ -125,7 +127,7 @@ export const SelectButton: React.FC = () => {
       <Link to="/manage" className="text-white no-underline">
         <button
           ref={manageButton}
-          className="w-[250px] h-[60px] text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white focus:bg-[#1B304F] focus:text-white"
+          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white focus:bg-[#1B304F] focus:text-white"
           onClick={() => handleButtonClick("Manage")}
         >
           Manage
