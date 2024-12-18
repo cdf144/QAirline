@@ -24,16 +24,17 @@ export class AircraftService {
       economySeat: createAircraftDto.economySeat,
       businessSeat: createAircraftDto.businessSeat,
     });
-    return newAircraft.save();
+    return (await newAircraft.save()).toObject();
   }
 
   async findAll(): Promise<Aircraft[]> {
-    return this.aircraftModel.find().exec();
+    return this.aircraftModel.find().lean().exec();
   }
 
   async findOneById(id: string): Promise<Aircraft> {
     return this.aircraftModel
       .findById(id)
+      .lean()
       .exec()
       .then((aircraft) => {
         if (!aircraft) {

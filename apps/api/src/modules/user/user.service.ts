@@ -17,7 +17,7 @@ export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return this.userModel.find().lean().exec();
   }
 
   async findOneById(id: string): Promise<User | null> {
@@ -33,6 +33,7 @@ export class UserService {
   ): Promise<User | null> {
     return this.userModel
       .findOne(filter)
+      .lean()
       .exec()
       .then((user) => {
         return user;
@@ -85,6 +86,7 @@ export class UserService {
       throw new InternalServerErrorException('Failed to create user');
     }
 
+    // TODO: Implement password hashing
     const newUser = new this.userModel({
       email: registerUserDto.email,
       password: registerUserDto.password,
@@ -93,7 +95,7 @@ export class UserService {
       phone: normalizedRegPhone,
       idCardNumber: registerUserDto.idCardNumber,
     });
-    return newUser.save();
+    return (await newUser.save()).toObject();
   }
 
   async updateById(id: string, updateUserDto: UpdateUserDto): Promise<User> {
@@ -141,7 +143,10 @@ export class UserService {
       user.idCardNumber = newIdCardNumber;
     }
 
-    return this.userModel.findOneAndUpdate(filter, user, { new: true }).exec();
+    return this.userModel
+      .findOneAndUpdate(filter, user, { new: true })
+      .lean()
+      .exec();
   }
 
   async deleteById(id: string): Promise<User> {
@@ -155,6 +160,7 @@ export class UserService {
   private async delete(filter: FilterQuery<UserDocument>): Promise<User> {
     return this.userModel
       .findOneAndDelete(filter, { returnDocument: 'before' })
+      .lean()
       .exec()
       .then((user) => {
         if (!user) {

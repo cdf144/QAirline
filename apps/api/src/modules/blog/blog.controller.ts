@@ -15,6 +15,7 @@ import { CreateBlogDto } from './dto/create-blog.dto';
 @Controller('v1/blog')
 export class BlogController {
   constructor(private readonly blogService: BlogService) {}
+  // TODO: Add the other CRUD endpoints
 
   @Post()
   @ApiCreatedResponse({ description: 'Blog created' })

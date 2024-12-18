@@ -25,16 +25,17 @@ export class BlogService {
       body: createBlogDto.body,
       category: createBlogDto.category,
     });
-    return createdBlog.save();
+    return (await createdBlog.save()).toObject();
   }
 
   async findAll(): Promise<Blog[]> {
-    return this.blogModel.find().exec();
+    return this.blogModel.find().lean().exec();
   }
 
   async findOneById(id: string): Promise<Blog> {
     return this.blogModel
       .findById(id)
+      .lean()
       .exec()
       .then((blog) => {
         if (!blog) {

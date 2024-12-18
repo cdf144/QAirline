@@ -17,7 +17,7 @@ export class FlightService {
   ) {}
 
   async findAll(): Promise<Flight[]> {
-    return this.flightModel.find().exec();
+    return this.flightModel.find().lean().exec();
   }
 
   async findOneById(id: string): Promise<Flight> {
@@ -31,6 +31,7 @@ export class FlightService {
   private async findOne(filter: any): Promise<Flight> {
     return this.flightModel
       .findOne(filter)
+      .lean()
       .exec()
       .then((flight) => {
         if (!flight) {
@@ -70,7 +71,7 @@ export class FlightService {
       price: Types.Decimal128.fromString(createFlightDto.price),
     });
 
-    return newFlight.save();
+    return (await newFlight.save()).toObject();
   }
 
   async updateById(
@@ -133,6 +134,7 @@ export class FlightService {
 
     return this.flightModel
       .findOneAndUpdate(filter, flight, { new: true })
+      .lean()
       .exec();
   }
 
@@ -147,6 +149,7 @@ export class FlightService {
   private async delete(filter: FilterQuery<FlightDocument>): Promise<Flight> {
     return this.flightModel
       .findOneAndDelete(filter, { returnDocument: 'before' })
+      .lean()
       .exec()
       .then((flight) => {
         if (!flight) {

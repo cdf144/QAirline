@@ -40,16 +40,24 @@ export class TicketService {
       totalPrice: Types.Decimal128.fromString(createTicketDto.totalPrice),
     });
 
-    return newTicket.save();
+    return (await newTicket.save()).toObject();
   }
 
   async findAll(): Promise<Ticket[]> {
-    return this.ticketModel.find().exec();
+    return this.ticketModel.find().lean().exec();
+  }
+
+  async findAllPending(): Promise<Ticket[]> {
+    return this.ticketModel
+      .find({ status: TicketStatus.Pending })
+      .lean()
+      .exec();
   }
 
   async findOne(id: string): Promise<Ticket> {
     return this.ticketModel
       .findById(id)
+      .lean()
       .exec()
       .then((ticket) => {
         if (!ticket) {
@@ -82,13 +90,17 @@ export class TicketService {
       ticket.totalPrice = Types.Decimal128.fromString(totalPrice);
     }
 
-    return this.ticketModel.findByIdAndUpdate(id, ticket, { new: true }).exec();
+    return this.ticketModel
+      .findByIdAndUpdate(id, ticket, { new: true })
+      .lean()
+      .exec();
   }
 
   async delete(id: string): Promise<Ticket> {
     // TODO: Perform validation to prevent ticket cannot be deleted if departure time is less than 24 hours
     return this.ticketModel
-      .findByIdAndDelete(id)
+      .findByIdAndDelete(id, { returnDocument: 'before' })
+      .lean()
       .exec()
       .then((ticket) => {
         if (!ticket) {
@@ -108,9 +120,5 @@ export class TicketService {
         console.error(error);
         throw new InternalServerErrorException('Failed to delete ticket');
       });
-  }
-
-  async findAllPending(): Promise<Ticket[]> {
-    return this.ticketModel.find({ status: TicketStatus.Pending }).exec();
   }
 }

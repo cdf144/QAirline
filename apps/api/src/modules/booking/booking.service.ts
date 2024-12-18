@@ -16,7 +16,7 @@ export class BookingService {
   ) {}
 
   async findAll(): Promise<Booking[]> {
-    return this.bookingModel.find().exec();
+    return this.bookingModel.find().lean().exec();
   }
 
   async findOneById(id: string): Promise<Booking> {
@@ -30,6 +30,7 @@ export class BookingService {
   async findOne(filter: any): Promise<Booking> {
     return this.bookingModel
       .findOne(filter)
+      .lean()
       .exec()
       .then((booking) => {
         if (!booking) {
@@ -64,7 +65,7 @@ export class BookingService {
       userId: userObjectId,
       classType: createBookingDto.classType,
     });
-    return newBooking.save();
+    return (await newBooking.save()).toObject();
   }
 
   async deleteById(id: string): Promise<Booking> {
@@ -77,7 +78,8 @@ export class BookingService {
 
   async delete(filter: any): Promise<Booking> {
     return this.bookingModel
-      .findOneAndDelete(filter)
+      .findOneAndDelete(filter, { returnDocument: 'before' })
+      .lean()
       .exec()
       .then((booking) => {
         if (!booking) {

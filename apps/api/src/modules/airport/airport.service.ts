@@ -29,16 +29,17 @@ export class AirportService {
       code: createAirportDto.code,
       city: vietnamAirportIataList[createAirportDto.code],
     });
-    return newAirport.save();
+    return (await newAirport.save()).toObject();
   }
 
   async findAll(): Promise<Airport[]> {
-    return this.airportModel.find().exec();
+    return this.airportModel.find().lean().exec();
   }
 
   async findOneById(id: string): Promise<Airport> {
     return this.airportModel
       .findById(id)
+      .lean()
       .exec()
       .then((airport) => {
         if (!airport) {
@@ -66,6 +67,7 @@ export class AirportService {
     }
     return this.airportModel
       .findOne({ code: code })
+      .lean()
       .exec()
       .then((airport) => {
         if (!airport) {

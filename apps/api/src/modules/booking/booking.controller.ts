@@ -21,6 +21,8 @@ const INVALID_IDENTIFIER_MESSAGE =
 @Controller('v1/booking')
 export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
+  // TODO: Update booking?
+
   @Get()
   async findAll() {
     const bookings = await this.bookingService.findAll();
