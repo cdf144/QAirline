@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AirlineLogin } from "./component/AirlineLogin.tsx";
@@ -10,15 +11,20 @@ import { SignUpPage } from "./component/SignUpPage.tsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
-  <Router>
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/booking" element={<BookingPage />} />
-      <Route path="/login" element={<AirlineLogin />} />
-      <Route path="/manage" element={<ManageBooking />} />
-      <Route path="/signUp" element={<SignUpPage />} />
-      <Route path="/recommend" element={<BookingPageAfterClickInRecommend />} />
-      <Route path="/forgotPassword" element={<ForgotPassword />} />
-    </Routes>
-  </Router>,
+  <StrictMode>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/booking" element={<BookingPage />} />
+        <Route path="/login" element={<AirlineLogin />} />
+        <Route path="/manage" element={<ManageBooking />} />
+        <Route path="/signUp" element={<SignUpPage />} />
+        <Route
+          path="/recommend"
+          element={<BookingPageAfterClickInRecommend />}
+        />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+      </Routes>
+    </Router>
+  </StrictMode>,
 );
