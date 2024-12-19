@@ -28,7 +28,6 @@ const INVALID_IDENTIFIER_MESSAGE =
 export class FlightController {
   constructor(private flightService: FlightService) {}
   // TODO: Implement GET /search API for searching flights by departure and destination airports, departure time, and price range
-  // TODO: Add Swagger Response documentation decorators
 
   @Public()
   @Get()

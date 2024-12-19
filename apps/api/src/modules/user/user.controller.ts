@@ -9,12 +9,7 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiInternalServerErrorResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
 import { COOKIE_NAMES } from 'src/common/constants';
 import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
@@ -29,7 +24,6 @@ import { UserService } from './user.service';
 @Controller('v1/user')
 export class UserController {
   constructor(private userService: UserService) {}
-  // TODO: Add Swagger Response documentation for each endpoint that doesn't have it yet
 
   @Get()
   async findAll(@Res() res: FastifyReply): Promise<void> {
@@ -69,13 +63,6 @@ export class UserController {
 
   @Public()
   @Post('register')
-  @ApiCreatedResponse({ description: 'User created' })
-  @ApiBadRequestResponse({
-    description: 'Email, phone, or ID card number already in use',
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Failed to create user due to server error',
-  })
   async create(
     @Res() res: FastifyReply,
     @Body() registerUserDto: RegisterUserDto,
@@ -139,6 +126,5 @@ export class UserController {
     res.send(deletedUser);
   }
 
-  // TODO: Add login endpoint
   // TODO: Add find user's tickets endpoint
 }

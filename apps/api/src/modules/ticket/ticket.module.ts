@@ -4,7 +4,6 @@ import { Ticket, TicketSchema } from './schemas/ticket.schema';
 import { TicketController } from './ticket.controller';
 import { TicketService } from './ticket.service';
 
-// TODO: Write Jest tests for the TicketModule
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Ticket.name, schema: TicketSchema }]),
