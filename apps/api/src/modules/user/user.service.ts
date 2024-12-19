@@ -28,6 +28,15 @@ export class UserService {
     return this.findOne({ email: email });
   }
 
+  async findOneByPhone(phone: string): Promise<User | null> {
+    // Passed in phone number is already validated through getIdentifierType()
+    return this.findOne({ phone: normalizePhoneNumber(phone) });
+  }
+
+  async findOneByIdCardNumber(idCardNumber: string): Promise<User | null> {
+    return this.findOne({ idCardNumber: idCardNumber });
+  }
+
   private async findOne(
     filter: FilterQuery<UserDocument>,
   ): Promise<User | null> {

@@ -50,10 +50,10 @@ export class UserController {
         user = await this.userService.findOneByEmail(identifier);
         break;
       case 'phone':
-        // TODO: Implement find by phone number
+        user = await this.userService.findOneByPhone(identifier);
         break;
       case 'idCardNumber':
-        // TODO: Implement find by ID card number
+        user = await this.userService.findOneByIdCardNumber(identifier);
         break;
       default:
         throw new BadRequestException(
