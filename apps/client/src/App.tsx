@@ -7,11 +7,9 @@ import ManageBooking from "./component/ManageBooking";
 const App: React.FC = () => {
   return (
     <Router>
-      <BrowserRouter>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/booking" element={<BookingPage />} />
-        <Route path="/manage-booking" element={<ManageBooking />} />
-      </BrowserRouter>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/booking" element={<BookingPage />} />
+      <Route path="/manage-booking" element={<ManageBooking />} />
     </Router>
   );
 };
