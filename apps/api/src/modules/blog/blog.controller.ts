@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { Public } from 'src/common/decorators/public.decorator';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 
@@ -33,6 +34,7 @@ export class BlogController {
     res.send(newBlog);
   }
 
+  @Public()
   @Get()
   @ApiOkResponse({ description: 'Blogs found' })
   @ApiInternalServerErrorResponse({
@@ -43,6 +45,7 @@ export class BlogController {
     res.send(blogs);
   }
 
+  @Public()
   @Get(':id')
   @ApiOkResponse({ description: 'Blog found' })
   @ApiBadRequestResponse({
@@ -52,11 +55,11 @@ export class BlogController {
   @ApiInternalServerErrorResponse({
     description: 'Failed to find blog due to server error',
   })
-  async findOneById(
+  async findOne(
     @Res() res: FastifyReply,
     @Param('id') id: string,
   ): Promise<void> {
-    const blog = await this.blogService.findOneById(id);
+    const blog = await this.blogService.findOne(id);
     res.send(blog);
   }
 }

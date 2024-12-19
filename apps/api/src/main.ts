@@ -24,6 +24,14 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'JWTBearerAuth',
+    )
     .setTitle('QAirline API')
     .setDescription('API documentation for QAirline')
     .setVersion('1.0')

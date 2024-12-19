@@ -14,9 +14,7 @@ export class AircraftService {
   constructor(
     @InjectModel(Aircraft.name) private aircraftModel: Model<AircraftDocument>,
   ) {}
-  async createAircraft(
-    createAircraftDto: CreateAircraftDto,
-  ): Promise<Aircraft> {
+  async create(createAircraftDto: CreateAircraftDto): Promise<Aircraft> {
     const newAircraft = new this.aircraftModel({
       manufacturer: createAircraftDto.manufacturer,
       model: createAircraftDto.model,
@@ -31,7 +29,7 @@ export class AircraftService {
     return this.aircraftModel.find().lean().exec();
   }
 
-  async findOneById(id: string): Promise<Aircraft> {
+  async findOne(id: string): Promise<Aircraft> {
     return this.aircraftModel
       .findById(id)
       .lean()

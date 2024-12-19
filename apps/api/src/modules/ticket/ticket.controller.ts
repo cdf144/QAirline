@@ -18,6 +18,7 @@ import { TicketService } from './ticket.service';
 @Controller('v1/ticket')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
+
   @Post()
   async create(
     @Res() res: FastifyReply,

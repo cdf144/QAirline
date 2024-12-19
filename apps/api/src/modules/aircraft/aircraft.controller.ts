@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { Public } from 'src/common/decorators/public.decorator';
 import { AircraftService } from './aircraft.service';
 import { CreateAircraftDto } from './dto/create-aircraft.dto';
 
@@ -24,15 +25,15 @@ export class AircraftController {
   @ApiInternalServerErrorResponse({
     description: 'Failed to create aircraft due to server error',
   })
-  async createAircraft(
+  async create(
     @Res() res: FastifyReply,
     @Body() createAircraftDto: CreateAircraftDto,
   ): Promise<void> {
-    const newAircraft =
-      await this.aircraftService.createAircraft(createAircraftDto);
+    const newAircraft = await this.aircraftService.create(createAircraftDto);
     res.send(newAircraft);
   }
 
+  @Public()
   @Get()
   @ApiOkResponse({ description: 'Aircrafts found' })
   @ApiInternalServerErrorResponse({
@@ -43,6 +44,7 @@ export class AircraftController {
     res.send(aircrafts);
   }
 
+  @Public()
   @Get(':id')
   @ApiOkResponse({ description: 'Aircraft found' })
   @ApiBadRequestResponse({
@@ -52,11 +54,11 @@ export class AircraftController {
   @ApiInternalServerErrorResponse({
     description: 'Failed to find aircraft due to server error',
   })
-  async findOneById(
+  async findOne(
     @Res() res: FastifyReply,
     @Param('id') id: string,
   ): Promise<void> {
-    const aircraft = await this.aircraftService.findOneById(id);
+    const aircraft = await this.aircraftService.findOne(id);
     res.send(aircraft);
   }
 }

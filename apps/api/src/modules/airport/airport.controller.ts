@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { Public } from 'src/common/decorators/public.decorator';
 import { AirportService } from './airport.service';
 import { CreateAirportDto } from './dto/create-airport.dto';
 
@@ -17,11 +18,15 @@ export class AirportController {
     const newAirport = await this.airportService.create(createAirportDto);
     res.send(newAirport);
   }
+
+  @Public()
   @Get()
   async findAll(@Res() res: FastifyReply): Promise<void> {
     const airports = await this.airportService.findAll();
     res.send(airports);
   }
+
+  @Public()
   @Get(':id')
   async findOneById(
     @Res() res: FastifyReply,

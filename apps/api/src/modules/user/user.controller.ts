@@ -16,6 +16,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { Public } from 'src/common/decorators/public.decorator';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
@@ -63,6 +64,7 @@ export class UserController {
     res.send(user);
   }
 
+  @Public()
   @Post('register')
   @ApiCreatedResponse({ description: 'User created' })
   @ApiBadRequestResponse({

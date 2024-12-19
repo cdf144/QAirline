@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { Public } from 'src/common/decorators/public.decorator';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
 import { FlightService } from './flight.service';
@@ -26,12 +27,14 @@ export class FlightController {
   // TODO: Implement GET /search API for searching flights by departure and destination airports, departure time, and price range
   // TODO: Add Swagger Response documentation decorators
 
+  @Public()
   @Get()
   async findAll(@Res() res: FastifyReply): Promise<void> {
     const flights = await this.flightService.findAll();
     res.send(flights);
   }
 
+  @Public()
   @Get(':identifier')
   async findOne(
     @Res() res: FastifyReply,

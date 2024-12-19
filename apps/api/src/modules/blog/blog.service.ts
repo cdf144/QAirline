@@ -32,7 +32,7 @@ export class BlogService {
     return this.blogModel.find().lean().exec();
   }
 
-  async findOneById(id: string): Promise<Blog> {
+  async findOne(id: string): Promise<Blog> {
     return this.blogModel
       .findById(id)
       .lean()
