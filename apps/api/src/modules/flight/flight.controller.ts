@@ -14,6 +14,8 @@ import { FastifyReply } from 'fastify';
 import { COOKIE_NAMES } from 'src/common/constants';
 import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
 import { FlightService } from './flight.service';
@@ -59,6 +61,7 @@ export class FlightController {
     res.send(flight);
   }
 
+  @Roles(Role.Admin)
   @Post()
   async create(
     @Res() res: FastifyReply,

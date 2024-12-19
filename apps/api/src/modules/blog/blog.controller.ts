@@ -4,6 +4,8 @@ import { FastifyReply } from 'fastify';
 import { COOKIE_NAMES } from 'src/common/constants';
 import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 
@@ -14,6 +16,7 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
   // TODO: Add the other CRUD endpoints
 
+  @Roles(Role.Admin)
   @Post()
   async create(
     @Res() res: FastifyReply,

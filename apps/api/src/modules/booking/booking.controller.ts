@@ -12,6 +12,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
 import { COOKIE_NAMES } from 'src/common/constants';
 import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { Booking } from './schemas/booking.schema';
@@ -26,6 +28,7 @@ export class BookingController {
   constructor(private readonly bookingService: BookingService) {}
   // TODO: Update booking?
 
+  @Roles(Role.Admin)
   @Get()
   async findAll() {
     const bookings = await this.bookingService.findAll();

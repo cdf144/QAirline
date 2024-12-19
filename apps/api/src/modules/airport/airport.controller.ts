@@ -12,6 +12,8 @@ import { FastifyReply } from 'fastify';
 import { COOKIE_NAMES } from 'src/common/constants';
 import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
 import { AirportService } from './airport.service';
 import { CreateAirportDto } from './dto/create-airport.dto';
 import { Airport } from './schemas/airport.schema';
@@ -25,6 +27,7 @@ const INVALID_IDENTIFIER_MESSAGE =
 export class AirportController {
   constructor(private airportService: AirportService) {}
 
+  @Roles(Role.Admin)
   @Post()
   async create(
     @Res() res: FastifyReply,
