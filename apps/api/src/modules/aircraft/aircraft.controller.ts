@@ -8,11 +8,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { COOKIE_NAMES } from 'src/common/constants';
+import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
 import { AircraftService } from './aircraft.service';
 import { CreateAircraftDto } from './dto/create-aircraft.dto';
 
 @ApiTags('aircraft')
+@ConditionalApiCookieAuth(COOKIE_NAMES.ACCESS_TOKEN)
 @Controller('v1/aircraft')
 export class AircraftController {
   constructor(private readonly aircraftService: AircraftService) {}

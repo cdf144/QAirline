@@ -16,6 +16,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { COOKIE_NAMES } from 'src/common/constants';
+import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -23,6 +25,7 @@ import { User } from './schemas/user.schema';
 import { UserService } from './user.service';
 
 @ApiTags('user')
+@ConditionalApiCookieAuth(COOKIE_NAMES.ACCESS_TOKEN)
 @Controller('v1/user')
 export class UserController {
   constructor(private userService: UserService) {}

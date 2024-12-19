@@ -10,11 +10,14 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { COOKIE_NAMES } from 'src/common/constants';
+import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { TicketService } from './ticket.service';
 
 @ApiTags('ticket')
+@ConditionalApiCookieAuth(COOKIE_NAMES.ACCESS_TOKEN)
 @Controller('v1/ticket')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}

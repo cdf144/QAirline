@@ -1,11 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-
-/**
- * A constant key used as metadata to mark routes (handlers) or controllers (classes) as public (i.e., not requiring JWT authentication).
- *
- * @constant {string}
- */
-export const IS_PUBLIC_KEY = 'isPublic';
+import { IS_PUBLIC_KEY } from '../constants';
 
 /**
  * A decorator to mark a route (handler) or controller (class) as public, meaning it does not require JWT authentication.

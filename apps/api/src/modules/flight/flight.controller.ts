@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { COOKIE_NAMES } from 'src/common/constants';
+import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
@@ -21,6 +23,7 @@ const INVALID_IDENTIFIER_MESSAGE =
   'Invalid identifier provided. Must be a valid 24-character hexadecimal string, or a valid 5-character flight code consisting of uppercase letters and digits';
 
 @ApiTags('flight')
+@ConditionalApiCookieAuth(COOKIE_NAMES.ACCESS_TOKEN)
 @Controller('v1/flight')
 export class FlightController {
   constructor(private flightService: FlightService) {}

@@ -1,3 +1,4 @@
+import fastifyCookie from '@fastify/cookie';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -7,6 +8,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { COOKIE_NAMES } from './common/constants';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -15,6 +17,7 @@ async function bootstrap() {
   );
   const configService = app.get(ConfigService);
 
+  app.register(fastifyCookie);
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -24,13 +27,12 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .addBearerAuth(
+    .addCookieAuth(
+      'access-token',
       {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
+        type: 'apiKey',
       },
-      'JWTBearerAuth',
+      COOKIE_NAMES.ACCESS_TOKEN,
     )
     .setTitle('QAirline API')
     .setDescription('API documentation for QAirline')
