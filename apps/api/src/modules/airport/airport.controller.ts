@@ -1,9 +1,21 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
 import { Public } from 'src/common/decorators/public.decorator';
 import { AirportService } from './airport.service';
 import { CreateAirportDto } from './dto/create-airport.dto';
+import { Airport } from './schemas/airport.schema';
+
+const INVALID_IDENTIFIER_MESSAGE =
+  'Invalid identifier provided. Must be a valid 24-character hexadecimal string, or a valid Vietnam airport code';
 
 @ApiTags('airport')
 @Controller('v1/airport')
@@ -27,21 +39,25 @@ export class AirportController {
   }
 
   @Public()
-  @Get(':id')
+  @Get(':identifier')
   async findOneById(
     @Res() res: FastifyReply,
-    @Param('id') id: string,
+    @Param('identifier') identifier: string,
   ): Promise<void> {
-    const airport = await this.airportService.findOneById(id);
-    res.send(airport);
-  }
+    const identifierType = this.airportService.getIdentifierType(identifier);
+    let airport: Airport;
 
-  @Get('code/:code')
-  async findOneByCode(
-    @Res() res: FastifyReply,
-    @Param('code') code: string,
-  ): Promise<void> {
-    const airport = await this.airportService.findOneByCode(code);
+    switch (identifierType) {
+      case 'mongoId':
+        airport = await this.airportService.findOneById(identifier);
+        break;
+      case 'code':
+        airport = await this.airportService.findOneByCode(identifier);
+        break;
+      default:
+        throw new BadRequestException(INVALID_IDENTIFIER_MESSAGE);
+    }
+
     res.send(airport);
   }
 }

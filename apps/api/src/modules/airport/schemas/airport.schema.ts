@@ -1,10 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type AirportDocument = HydratedDocument<Airport>;
 
 @Schema()
 export class Airport {
+  _id: Types.ObjectId;
+  __v: number;
+
   @Prop({ unique: true, required: true })
   code: string;
 

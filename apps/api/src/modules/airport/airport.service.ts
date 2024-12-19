@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { vietnamAirportIataList } from 'src/common/lists/vietnam-airport-iata.list';
 import { CreateAirportDto } from './dto/create-airport.dto';
 import { Airport, AirportDocument } from './schemas/airport.schema';
@@ -37,50 +37,50 @@ export class AirportService {
   }
 
   async findOneById(id: string): Promise<Airport> {
+    return this.findOne({ _id: id });
+  }
+
+  async findOneByCode(code: string): Promise<Airport> {
+    return this.findOne({ code: code });
+  }
+
+  async findOne(filter: FilterQuery<Airport>): Promise<Airport> {
     return this.airportModel
-      .findById(id)
+      .findOne(filter)
       .lean()
       .exec()
       .then((airport) => {
         if (!airport) {
-          throw new NotFoundException(`Airport with id '${id}' not found`);
+          throw new NotFoundException(
+            `Airport with ${filter._id ? `id '${filter._id}'` : `code '${filter.code}'`} not found`,
+          );
         }
         return airport;
       })
       .catch((error) => {
-        if (error instanceof NotFoundException) {
-          throw error;
-        }
-        if (error.name === 'CastError') {
-          throw new BadRequestException(
-            `Invalid hexstring id '${id}' provided to find airport`,
-          );
-        }
+        this.handleFindErrors(error, filter);
         console.error(error);
         throw new InternalServerErrorException('Failed to find airport');
       });
   }
 
-  async findOneByCode(code: string): Promise<Airport> {
-    if (!vietnamAirportIataList[code]) {
-      throw new BadRequestException(`Invalid Vietnam airport code '${code}'`);
+  private handleFindErrors(error: any, filter: FilterQuery<AirportDocument>) {
+    if (error instanceof NotFoundException) {
+      throw error;
     }
-    return this.airportModel
-      .findOne({ code: code })
-      .lean()
-      .exec()
-      .then((airport) => {
-        if (!airport) {
-          throw new NotFoundException(`Airport with code '${code}' not found`);
-        }
-        return airport;
-      })
-      .catch((error) => {
-        if (error instanceof NotFoundException) {
-          throw error;
-        }
-        console.error(error);
-        throw new InternalServerErrorException('Failed to find airport');
-      });
+    if (error.name === 'CastError') {
+      throw new BadRequestException(
+        `Invalid hexstring id '${filter._id}' provided to find airport`,
+      );
+    }
+  }
+
+  getIdentifierType(identifier: string): 'mongoId' | 'code' | 'invalid' {
+    if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
+      return 'mongoId';
+    } else if (vietnamAirportIataList[identifier]) {
+      return 'code';
+    }
+    return 'invalid';
   }
 }
