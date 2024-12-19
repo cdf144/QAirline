@@ -8,6 +8,19 @@ import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../constants';
 import { Role } from '../enums/role.enum';
 
+/**
+ * Guard that checks if the user has the required roles to access a resource.
+ *
+ * This guard uses `Reflector` to retrieve the roles metadata set on the route handler or class.
+ * If no roles are required, access is granted by default.
+ * If roles are required, it checks if the user has at least one of the required roles.
+ * If the user does not have the required roles, a `ForbiddenException` is thrown.
+ *
+ * @class
+ * @implements {CanActivate}
+ *
+ * @throws {ForbiddenException} - Thrown if the user does not have the required roles.
+ */
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}

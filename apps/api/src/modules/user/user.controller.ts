@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
@@ -16,6 +17,7 @@ import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-
 import { Public } from 'src/common/decorators/public.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
+import { OwnershipGuard } from 'src/common/guards/ownership.guard';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
@@ -34,6 +36,7 @@ export class UserController {
     res.send(users);
   }
 
+  @UseGuards(OwnershipGuard)
   @Get(':identifier')
   async findOne(
     @Res() res: FastifyReply,
@@ -74,6 +77,7 @@ export class UserController {
     res.send(newUser);
   }
 
+  @UseGuards(OwnershipGuard)
   @Patch(':identifier')
   async update(
     @Res() res: FastifyReply,
@@ -105,6 +109,7 @@ export class UserController {
     res.send(updatedUser);
   }
 
+  @UseGuards(OwnershipGuard)
   @Delete(':identifier')
   async delete(
     @Res() res: FastifyReply,
