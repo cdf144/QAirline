@@ -11,6 +11,9 @@ export enum Category {
 
 @Schema()
 export class Blog {
+  _id: Types.ObjectId;
+  __v: number;
+
   @Prop({ type: Types.ObjectId, ref: 'User', default: null })
   adminId: Types.ObjectId;
 

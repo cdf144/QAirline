@@ -17,6 +17,9 @@ export enum TicketStatus {
 
 @Schema()
 export class Ticket {
+  _id: Types.ObjectId;
+  __v: number;
+
   @Prop({ type: Types.ObjectId, ref: 'Booking', required: true })
   bookingId: Types.ObjectId;
 

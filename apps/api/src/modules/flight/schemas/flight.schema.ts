@@ -13,6 +13,9 @@ export enum FlightStatus {
 
 @Schema()
 export class Flight {
+  _id: Types.ObjectId;
+  __v: number;
+
   @Prop({ unique: true, required: true })
   code: string;
 

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 import { Role } from '../../../common/enums/role.enum';
 
 export type UserDocument = HydratedDocument<User>;
@@ -12,7 +12,7 @@ export enum Gender {
 
 @Schema()
 export class User {
-  _id: string;
+  _id: Types.ObjectId;
   __v: number;
 
   @Prop({ unique: true, required: true })

@@ -10,6 +10,9 @@ export enum ClassType {
 
 @Schema()
 export class Booking {
+  _id: Types.ObjectId;
+  __v: number;
+
   @Prop({ unique: true, required: true })
   code: string;
 
