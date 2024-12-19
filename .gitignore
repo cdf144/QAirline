@@ -6,6 +6,10 @@
 .env.production.local
 .env.local
 
+# Any package-lock.json file that is not the root
+**/package-lock.json
+!package-lock.json
+
 ## Node ##
 # Logs
 logs
