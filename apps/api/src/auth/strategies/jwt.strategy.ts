@@ -4,7 +4,10 @@ import { PassportStrategy } from '@nestjs/passport';
 import { FastifyRequest } from 'fastify';
 import { Strategy as JwtPassportStrategy } from 'passport-jwt';
 import { COOKIE_NAMES } from 'src/common/constants';
-import { JwtPayloadResult } from 'src/common/interfaces/jwt-payload-result.interface';
+import {
+  JwtPayloadClaims,
+  JwtPayloadResult,
+} from 'src/common/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(JwtPassportStrategy) {
@@ -16,8 +19,8 @@ export class JwtStrategy extends PassportStrategy(JwtPassportStrategy) {
     });
   }
 
-  validate(payload: any): JwtPayloadResult {
-    return { userId: payload.sub, email: payload.email };
+  validate(payload: JwtPayloadClaims): JwtPayloadResult {
+    return { userId: payload.sub, email: payload.email, roles: payload.roles };
   }
 }
 

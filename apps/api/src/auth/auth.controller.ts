@@ -13,7 +13,7 @@ import { FastifyReply } from 'fastify';
 import { COOKIE_NAMES } from 'src/common/constants';
 import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { Public } from 'src/common/decorators/public.decorator';
-import { JwtPayloadResult } from '../common/interfaces/jwt-payload-result.interface';
+import { JwtPayloadResult } from '../common/interfaces/jwt-payload.interface';
 import { User } from '../modules/user/schemas/user.schema';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';

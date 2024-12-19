@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LoginResult } from 'src/common/interfaces/login-result.interface';
+import { JwtPayloadClaims } from 'src/common/interfaces/jwt-payload.interface';
+import { LoginResult } from 'src/common/interfaces/login.interface';
 import { User } from 'src/modules/user/schemas/user.schema';
 import { UserService } from 'src/modules/user/user.service';
 
@@ -25,7 +26,11 @@ export class AuthService {
   }
 
   login(user: Omit<User, 'password'>): LoginResult {
-    const payload = { email: user.email, sub: user._id.toString() };
+    const payload: JwtPayloadClaims = {
+      email: user.email,
+      roles: user.roles,
+      sub: user._id.toString(),
+    };
     return {
       accessToken: this.jwtService.sign(payload),
     };

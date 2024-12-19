@@ -4,6 +4,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 import { AircraftModule } from './modules/aircraft/aircraft.module';
 import { AirportModule } from './modules/airport/airport.module';
 import { BlogModule } from './modules/blog/blog.module';
@@ -37,6 +38,10 @@ import { UserModule } from './modules/user/user.module';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })
