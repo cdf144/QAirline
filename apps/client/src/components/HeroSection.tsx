@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import homebg from "../assets/homebg.png";
-import FilledPrimaryButton from "./buttons/FilledPrimary";
-import FilledSecondaryButton from "./buttons/FilledSecondary";
+import FilledButton from "./buttons/Filled";
 
 const HeroSection: React.FC = () => {
   return (
@@ -27,10 +26,14 @@ const HeroSection: React.FC = () => {
 
         <div className="lg:w-1/2 m-8 flex flex-col lg:flex-row items-start lg:items-center justify-between lg:justify-normal">
           <Link to="/booking" className="mx-4 my-2">
-            <FilledPrimaryButton text="Booking" size="extraLarge" />
+            <FilledButton text="Booking" size="extraLarge" />
           </Link>
           <Link to="/manage" className="mx-4 my-2 text-white no-underline">
-            <FilledSecondaryButton text="Manage Booking" size="extraLarge" />
+            <FilledButton
+              text="Manage Booking"
+              size="extraLarge"
+              color="secondary"
+            />
           </Link>
         </div>
 

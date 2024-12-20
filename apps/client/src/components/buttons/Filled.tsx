@@ -1,7 +1,8 @@
-interface FilledTertiaryButtonProps
+interface FilledPrimaryButtonProps
   extends React.ComponentPropsWithoutRef<"button"> {
   text: string;
   size?: keyof typeof sizeClasses;
+  color?: string;
 }
 
 const sizeClasses = {
@@ -11,17 +12,18 @@ const sizeClasses = {
   extraLarge: "w-40 md:w-56 h-12 md:h-14 text-xl",
 };
 
-const FilledTertiaryButton: React.FC<FilledTertiaryButtonProps> = ({
+const FilledButton: React.FC<FilledPrimaryButtonProps> = ({
   text,
   size = "medium",
+  color = "primary",
 }) => {
   return (
     <button
-      className={`px-3 py-1 bg-tertiary hover:bg-tertiary/75 rounded-full border border-none hover:border-solid text-base font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors ${sizeClasses[size]}`}
+      className={`${sizeClasses[size]} px-3 py-1 bg-${color} hover:bg-${color}/75 rounded-full border border-none hover:border-solid text-base font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden`}
     >
       {text}
     </button>
   );
 };
 
-export default FilledTertiaryButton;
+export default FilledButton;

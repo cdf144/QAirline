@@ -1,6 +1,7 @@
 interface OutlinedButtonProps extends React.ComponentPropsWithoutRef<"button"> {
   text: string;
   size?: keyof typeof sizeClasses;
+  color?: string;
 }
 
 const sizeClasses = {
@@ -13,10 +14,11 @@ const sizeClasses = {
 const OutlinedButton: React.FC<OutlinedButtonProps> = ({
   text,
   size = "medium",
+  color = "primary",
 }) => {
   return (
     <button
-      className={`px-3 py-1 bg-transparent hover:bg-primary/75 rounded-full border border-primary text-base font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors ${sizeClasses[size]}`}
+      className={`${sizeClasses[size]} px-3 py-1 bg-transparent hover:bg-${color}/75 rounded-full border border-${color} border-solid text-base font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden`}
     >
       {text}
     </button>

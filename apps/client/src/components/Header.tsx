@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import qairlineLogo from "../assets/qairline-logo.png";
-import FilledSecondaryButton from "./buttons/FilledSecondary";
-import FilledTertiaryButton from "./buttons/FilledTertiary";
+import FilledButton from "./buttons/Filled";
 
 interface HeaderProps {
   transparent: boolean;
@@ -26,10 +25,10 @@ const Header: React.FC<HeaderProps> = ({ transparent }) => {
 
         <div className="top-0 right-0 px-2 flex space-x-4 z-10">
           <Link to="/login">
-            <FilledTertiaryButton text="Login" />
+            <FilledButton text="Login" color="tertiary" />
           </Link>
           <Link to="/signup" className="text-white no-underline">
-            <FilledSecondaryButton text="Sign Up" />
+            <FilledButton text="Sign Up" color="secondary" />
           </Link>
         </div>
       </div>
