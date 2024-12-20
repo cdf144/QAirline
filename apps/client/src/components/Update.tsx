@@ -6,6 +6,7 @@ export const Sidebar: React.FC<{
   selectedForm: string;
   setSelectedForm: (form: string) => void;
 }> = ({ isCollapsed, toggleSidebar, selectedForm, setSelectedForm }) => {
+  // Bổ sung trong danh sách `buttons`
   const buttons = [
     {
       id: "postInformation",
@@ -16,6 +17,11 @@ export const Sidebar: React.FC<{
       id: "flightDetail",
       label: "Flight Detail",
       icon: "/src/assets/plane.png",
+    },
+    {
+      id: "bookingDetail", // Thêm nút mới
+      label: "Booking Detail",
+      icon: "/src/assets/booking.png", // Đường dẫn icon tùy bạn thay đổi
     },
     {
       id: "planeDetail",
@@ -33,7 +39,7 @@ export const Sidebar: React.FC<{
     >
       <div className={`p-6 bg-white ${isCollapsed ? "text-center" : ""}`}>
         <h2
-          className={`text-lg font-bold text-[#1B304F] text-[40px] ${
+          className={`text-lg font-bold text-[#1B304F] text-[39px] ${
             isCollapsed ? "hidden" : "block"
           }`}
         >
@@ -49,8 +55,8 @@ export const Sidebar: React.FC<{
               isCollapsed ? "justify-center" : ""
             } w-full px-4 py-2 rounded-md shadow-md ${
               selectedForm === button.id
-                ? "bg-blue-600 text-white"
-                : "bg-white text-gray-600 hover:bg-blue-600 hover:text-white"
+                ? "bg-[#1B304F] text-white"
+                : "bg-white text-gray-600 hover:bg-[#1B304F] hover:text-white"
             }`}
           >
             <img
@@ -168,6 +174,34 @@ const FlightDetailForm = () => (
     />
   </FormLayout>
 );
+const BookingDetailForm = () => (
+  <div>
+    <div className="flex flex-col gap-4 bg-white p-4  rounded-lg shadow-lg w-[800px]">
+      <div className="flex items-center justify-between p-4 bg-green-100 h-[100px] rounded-lg">
+        <span className="text-4xl font-bold text-green-600">5 Lakhs</span>
+        <span className="text-gray-600 text-lg">Today's Booking</span>
+      </div>
+    </div>
+    <div className="flex flex-col mt-5 gap-4 bg-white p-4 rounded-lg shadow-lg w-[800px]">
+      <div className="flex items-center justify-between p-4 bg-blue-100 h-[100px] rounded-lg">
+        <span className="text-4xl font-bold text-blue-600">60 Nos</span>
+        <span className="text-gray-600 text-lg">Today's Fly Flight</span>
+      </div>
+    </div>
+    <div className="flex flex-col mt-5 gap-4 bg-white p-4 rounded-lg shadow-lg w-[800px]">
+      <div className="flex items-center justify-between p-4 bg-red-100 h-[100px] rounded-lg">
+        <span className="text-4xl font-bold text-red-600">10 Nos</span>
+        <span className="text-gray-600 text-lg">30 day's Booking</span>
+      </div>
+    </div>
+    <div className="flex flex-col mt-5 gap-4 bg-white p-4 rounded-lg shadow-lg w-[800px]">
+      <div className="flex items-center justify-between p-4 bg-yellow-100 h-[100px] rounded-lg">
+        <span className="text-4xl font-bold text-yellow-600">90 Per</span>
+        <span className="text-gray-600 text-lg">Proceeds</span>
+      </div>
+    </div>
+  </div>
+);
 
 const PlaneDetailForm = () => (
   <FormLayout submitText="Submit" title="Plane Detail" className="mt-[120px]">
@@ -184,7 +218,7 @@ const PlaneDetailForm = () => (
     <input
       type="date"
       placeholder="dd/mm/yyyy"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none placeholder-gray-400"
+      className="w-full p-3 pr-5 border border-black rounded-md bg-white text-black focus:outline-none placeholder-gray-400"
       style={{
         backgroundImage: 'url("/src/assets/lich.png")',
         backgroundSize: "20px 20px",
@@ -239,6 +273,8 @@ export const Update: React.FC = () => {
         return <PostInformationForm />;
       case "flightDetail":
         return <FlightDetailForm />;
+      case "bookingDetail": // Xử lý khi nhấn nút Booking Detail
+        return <BookingDetailForm />;
       case "planeDetail":
         return <PlaneDetailForm />;
       case "changeTime":
