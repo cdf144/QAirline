@@ -103,7 +103,6 @@ export class UserService {
 
     const hashedPassword = await this.hashPassword(registerUserDto.password);
 
-    // Implement password hashing
     const newUser = new this.userModel({
       email: registerUserDto.email,
       password: hashedPassword,
