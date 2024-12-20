@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import StandardLayout from "../layouts/Standard";
 
-export const AirlineLogin: React.FC = () => {
+export const LoginPage: React.FC = () => {
   return (
     <StandardLayout>
       <div

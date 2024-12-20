@@ -1,7 +1,7 @@
 import React from "react";
 import StandardLayout from "../layouts/Standard";
 
-export const BookingPageAfterClickInRecommend: React.FC = () => {
+export const BookingAfterRecommendPage: React.FC = () => {
   return (
     <StandardLayout>
       <div
@@ -153,4 +153,4 @@ export const BookingPageAfterClickInRecommend: React.FC = () => {
   );
 };
 
-export default BookingPageAfterClickInRecommend;
+export default BookingAfterRecommendPage;

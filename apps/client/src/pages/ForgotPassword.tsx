@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import StandardLayout from "../layouts/Standard";
 
-const ForgotPassword: React.FC = () => {
+const ForgotPasswordPage: React.FC = () => {
   const [selectedOption, setSelectedOption] = useState<string>("Member Number");
 
   // Function to handle option change
@@ -215,4 +215,4 @@ const SelectButton: React.FC = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgotPasswordPage;

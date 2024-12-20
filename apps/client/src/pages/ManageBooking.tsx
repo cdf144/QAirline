@@ -1,7 +1,7 @@
 import React from "react";
 import StandardLayout from "../layouts/Standard";
 
-export const ManageBooking: React.FC = () => {
+export const ManageBookingPage: React.FC = () => {
   return (
     <StandardLayout>
       <div
@@ -70,4 +70,4 @@ export const ManageBooking: React.FC = () => {
   );
 };
 
-export default ManageBooking;
+export default ManageBookingPage;
