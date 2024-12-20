@@ -17,6 +17,10 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1"
   }
 }
