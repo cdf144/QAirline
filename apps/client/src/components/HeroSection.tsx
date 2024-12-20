@@ -16,7 +16,7 @@ const HeroSection: React.FC = () => {
     >
       <div className="flex flex-col justify-evenly h-full px-2 md:px-16">
         <div className="w-2/5 m-8 mt-36">
-          <p className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-6">
+          <p className="text-primary italic text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-6">
             Safe Skies & Smart Prices
           </p>
           <p className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black">

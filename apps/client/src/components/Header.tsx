@@ -25,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ transparent }) => {
 
         <div className="top-0 right-0 px-2 flex space-x-4 z-10">
           <Link to="/login">
-            <FilledButton text="Login" color="tertiary" />
+            <FilledButton text="Login" color="white" textColor="neutral-700" />
           </Link>
           <Link to="/signup" className="text-white no-underline">
             <FilledButton text="Sign Up" color="secondary" />

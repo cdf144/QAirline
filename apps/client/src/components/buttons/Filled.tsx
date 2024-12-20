@@ -3,6 +3,7 @@ interface FilledPrimaryButtonProps
   text: string;
   size?: keyof typeof sizeClasses;
   color?: string;
+  textColor?: string;
 }
 
 const sizeClasses = {
@@ -16,10 +17,11 @@ const FilledButton: React.FC<FilledPrimaryButtonProps> = ({
   text,
   size = "medium",
   color = "primary",
+  textColor = "white",
 }) => {
   return (
     <button
-      className={`${sizeClasses[size]} px-3 py-1 bg-${color} hover:bg-${color}/75 rounded-full border border-none hover:border-solid text-base font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden`}
+      className={`${sizeClasses[size]} px-3 py-1 bg-${color} hover:bg-${color}/75 rounded-full border border-none hover:border-solid text-base text-${textColor} font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden `}
     >
       {text}
     </button>
