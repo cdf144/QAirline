@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
+  roles: string[];
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
 }
@@ -12,6 +13,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [roles, setRoles] = useState<string[]>([]);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -27,10 +29,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         if (!response.ok) {
           throw new Error("Authentication check failed");
         }
+        const data = await response.json();
         setIsAuthenticated(true);
+        setRoles(data.roles);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setIsAuthenticated(false);
+        setRoles([]);
       }
     };
 
@@ -55,11 +60,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     setIsAuthenticated(true);
+    setRoles(["user"]);
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setIsAuthenticated, login }}
+      value={{ isAuthenticated, roles, setIsAuthenticated, login }}
     >
       {children}
     </AuthContext.Provider>

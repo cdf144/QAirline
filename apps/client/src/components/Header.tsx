@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import qairlineLogo from "../assets/qairline-logo.png";
 import { useAuth } from "../context/AuthContext";
 import FilledButton from "./buttons/Filled";
+import ProfileMenu from "./ProfileMenu";
 
 interface HeaderProps {
   transparent: boolean;
@@ -26,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ transparent }) => {
           />
         </Link>
 
-        {isAuthenticated ? <ProfileButton /> : <LoginSignupButtons />}
+        {isAuthenticated ? <ProfileMenu /> : <LoginSignupButtons />}
       </div>
     </header>
   );
@@ -42,14 +43,6 @@ const LoginSignupButtons: React.FC = () => {
         <FilledButton text="Sign Up" color="secondary" />
       </Link>
     </div>
-  );
-};
-
-const ProfileButton: React.FC = () => {
-  return (
-    <Link to="/profile">
-      <FilledButton text="Profile" color="white" textColor="neutral-700" />
-    </Link>
   );
 };
 

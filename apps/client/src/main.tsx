@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./assets/css/index.css";
+import PrivateRoute from "./components/PrivateRoute.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { AdminPage } from "./pages/Admin.tsx";
 import { BookingPage } from "./pages/Booking.tsx";
@@ -24,7 +25,14 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/recommend" element={<BookingAfterRecommendPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/update" element={<AdminPage />} />
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute requiredRoles={["admin"]}>
+                <AdminPage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>
