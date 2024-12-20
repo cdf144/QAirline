@@ -9,6 +9,7 @@ const sizeClasses = {
   medium: "w-24 md:w-36 h-8 md:h-10 text-base",
   large: "w-32 md:w-48 h-10 md:h-12 text-lg",
   extraLarge: "w-40 md:w-56 h-12 md:h-14 text-xl",
+  full: "w-full h-12 md:h-14 text-xl",
 };
 
 const OutlinedButton: React.FC<OutlinedButtonProps> = ({
@@ -18,7 +19,7 @@ const OutlinedButton: React.FC<OutlinedButtonProps> = ({
 }) => {
   return (
     <button
-      className={`${sizeClasses[size]} px-3 py-1 bg-transparent hover:bg-${color}/90 rounded-full border border-${color} border-solid text-base text-neutral-700 hover:text-neutral-100 font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden`}
+      className={`${sizeClasses[size]} px-3 py-1 bg-transparent hover:bg-${color} rounded-full border border-${color} border-solid text-base text-neutral-700 hover:text-neutral-100 font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden`}
     >
       {text}
     </button>

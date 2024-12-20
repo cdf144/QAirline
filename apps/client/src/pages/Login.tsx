@@ -1,5 +1,9 @@
-import React, { useRef } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
+import formBg from "../assets/Booking_bg.png";
+import bookingBg from "../assets/bookingbg.jpg";
+import FilledButton from "../components/buttons/Filled";
+import OutlinedButton from "../components/buttons/Outlined";
 import StandardLayout from "../layouts/Standard";
 
 export const LoginPage: React.FC = () => {
@@ -8,35 +12,34 @@ export const LoginPage: React.FC = () => {
       <div
         className="flex flex-col justify-center items-center w-screen min-h-screen bg-cover bg-center px-4"
         style={{
-          backgroundImage: "url('src/assets/bookingbg.jpg')",
+          backgroundImage: `url(${bookingBg})`,
         }}
       >
-        {/* Header */}
         <div
-          className="w-full max-w-[600px] lg:h-[470px] lg:mt-[200px] shadow-md rounded-lg flex flex-col pt-10 bg-white bg-cover bg-center"
+          className="w-full max-w-screen-md mt-12 shadow-md rounded-3xl flex flex-col pt-10 bg-white bg-cover bg-center"
           style={{
-            backgroundImage: "url('/src/assets/Booking_bg.png')",
+            backgroundImage: `url(${formBg})`,
           }}
         >
           <div className="px-6 py-6">
-            {/* Navigation Buttons */}
             <SelectButton />
 
-            {/* Login Form */}
-            <h2 className="mb-4 text-lg lg:text-xl font-bold text-gray-700">
+            <div className="my-4 text-lg lg:text-xl font-bold text-gray-700">
               Login
-            </h2>
+            </div>
+
             <form className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-600">
-                  Member number or email or phone
+                  Email
                 </label>
                 <input
                   type="text"
                   className="w-full px-3 py-2 mt-1 border bg-white rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-black"
-                  placeholder="Enter your email or phone"
+                  placeholder="Enter your email"
                 />
               </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-600">
                   Password
@@ -64,24 +67,11 @@ export const LoginPage: React.FC = () => {
                 </Link>
               </div>
 
-              <button className="w-full py-2 mt-4 text-black text-lg lg:text-xl bg-yellow-500 rounded hover:bg-yellow-600">
-                LOGIN
-              </button>
+              <div className="flex justify-center py-2 mt-4">
+                <FilledButton text="LOGIN" size="full" />
+              </div>
             </form>
           </div>
-        </div>
-
-        {/* News Section */}
-        <div className="mt-[60px] h-10 w-full max-w-[1000px] p-4 bg-gray-100 text-black text-lg text-left flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
-          <img
-            src="/src/assets/docuicon.png"
-            alt="News icon"
-            className="h-5 w-5"
-          />
-          <span className="font-semibold ml-2">News:</span>
-          <span className="ml-2">
-            Discover the latest travel updates and promotions!
-          </span>
         </div>
       </div>
     </StandardLayout>
@@ -89,43 +79,14 @@ export const LoginPage: React.FC = () => {
 };
 
 export const SelectButton: React.FC = () => {
-  const bookingButton = useRef<HTMLButtonElement | null>(null);
-  const manageButton = useRef<HTMLButtonElement | null>(null);
-
-  const handleButtonClick = (buttonName: string) => {
-    // Reset button states
-    if (bookingButton.current)
-      bookingButton.current.classList.remove("bg-primary", "text-white");
-    if (manageButton.current)
-      manageButton.current.classList.remove("bg-primary", "text-white");
-
-    // Add selected state
-    if (buttonName === "Booking" && bookingButton.current) {
-      bookingButton.current.classList.add("bg-primary", "text-white");
-    } else if (buttonName === "Manage" && manageButton.current) {
-      manageButton.current.classList.add("bg-primary", "text-white");
-    }
-  };
-
   return (
-    <div className="flex flex-col lg:flex-row justify-center space-y-4 lg:space-y-0 lg:space-x-8 mb-6">
+    <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8 mb-6">
       <Link to="/booking" className="text-white no-underline">
-        <button
-          ref={bookingButton}
-          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white focus:bg-primary focus:text-white"
-          onClick={() => handleButtonClick("Booking")}
-        >
-          Booking
-        </button>
+        <OutlinedButton text="Booking" size="large" color="secondary" />
       </Link>
+
       <Link to="/manage" className="text-white no-underline">
-        <button
-          ref={manageButton}
-          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white focus:bg-primary focus:text-white"
-          onClick={() => handleButtonClick("Manage")}
-        >
-          Manage
-        </button>
+        <OutlinedButton text="Manage Booking" size="large" />
       </Link>
     </div>
   );

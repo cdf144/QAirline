@@ -11,6 +11,7 @@ const sizeClasses = {
   medium: "w-24 md:w-36 h-8 md:h-10 text-base",
   large: "w-32 md:w-48 h-10 md:h-12 text-lg",
   extraLarge: "w-40 md:w-56 h-12 md:h-14 text-xl",
+  full: "w-full h-12 md:h-14 text-xl",
 };
 
 const FilledButton: React.FC<FilledPrimaryButtonProps> = ({
