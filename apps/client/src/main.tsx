@@ -8,6 +8,7 @@ import ForgotPassword from "./components/ForgotPassword.tsx";
 import { HomePage } from "./components/HomePage.tsx";
 import { ManageBooking } from "./components/ManageBooking.tsx";
 import { SignUpPage } from "./components/SignUpPage.tsx";
+import { Update } from "./components/Update.tsx";
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
@@ -24,6 +25,7 @@ createRoot(document.getElementById("root")!).render(
           element={<BookingPageAfterClickInRecommend />}
         />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/update" element={<Update />} />
       </Routes>
     </Router>
   </StrictMode>,
