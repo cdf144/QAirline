@@ -157,18 +157,18 @@ export const SelectButton: React.FC = () => {
 
   const handleButtonClick = (buttonName: string) => {
     if (cashButton.current)
-      cashButton.current.classList.remove("bg-[#1B304F]", "text-white");
+      cashButton.current.classList.remove("bg-primary", "text-white");
     if (milesButton.current)
-      milesButton.current.classList.remove("bg-[#1B304F]", "text-white");
+      milesButton.current.classList.remove("bg-primary", "text-white");
     if (cashMilesButton.current)
-      cashMilesButton.current.classList.remove("bg-[#1B304F]", "text-white");
+      cashMilesButton.current.classList.remove("bg-primary", "text-white");
 
     if (buttonName === "Cash" && cashButton.current) {
-      cashButton.current.classList.add("bg-[#1B304F]", "text-white");
+      cashButton.current.classList.add("bg-primary", "text-white");
     } else if (buttonName === "Miles" && milesButton.current) {
-      milesButton.current.classList.add("bg-[#1B304F]", "text-white");
+      milesButton.current.classList.add("bg-primary", "text-white");
     } else if (buttonName === "Cash & Miles" && cashMilesButton.current) {
-      cashMilesButton.current.classList.add("bg-[#1B304F]", "text-white");
+      cashMilesButton.current.classList.add("bg-primary", "text-white");
     }
   };
 
@@ -176,21 +176,21 @@ export const SelectButton: React.FC = () => {
     <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
       <button
         ref={cashButton}
-        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white"
+        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white"
         onClick={() => handleButtonClick("Cash")}
       >
         Cash
       </button>
       <button
         ref={milesButton}
-        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white"
+        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white"
         onClick={() => handleButtonClick("Miles")}
       >
         Miles
       </button>
       <button
         ref={cashMilesButton}
-        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white"
+        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white"
         onClick={() => handleButtonClick("Cash & Miles")}
       >
         Cash & Miles

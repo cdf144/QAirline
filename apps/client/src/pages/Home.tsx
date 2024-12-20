@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import HeroSection from "../components/HeroSection";
 import StandardLayout from "../layouts/Standard";
 
 export const HomePage: React.FC = () => {
@@ -21,62 +21,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <StandardLayout isHeaderTransparent={isHeaderTransparent}>
-      <div
-        id="hero-section"
-        className="relative h-screen bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/src/assets/homebg.png')",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        }}
-      >
-        {/* Hero Content */}
-        <div className="flex flex-col justify-center h-full text-center text-white px-4">
-          <div className="relative flex items-start justify-start pl-4 md:pl-10 pt-20">
-            <div className="text-[#1B304F] max-w-3xl">
-              <h1 className="text-xl md:text-4xl lg:text-5xl font-bold mb-6 ml-4 md:ml-[20px] mt-[100px] md:mt-[150px]">
-                Safe skies & smart prices
-              </h1>
-              <h1 className="text-xl md:text-4xl lg:text-5xl font-bold mb-6 ml-4 md:ml-[20px]">
-                your perfect choice to
-              </h1>
-              <h1 className="text-xl md:text-4xl lg:text-5xl font-bold ml-4 md:ml-[20px]">
-                discover the world
-              </h1>
-            </div>
-          </div>
-
-          {/* Buttons */}
-          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 ">
-            <Link to="/booking" className="text-white no-underline">
-              <button className="px-6 py-2 w-full md:w-[300px] h-[60px] md:ml-[50px] mt-[50px] md:mt-[100px] bg-[#1B304F] text-white text-lg md:text-[30px] rounded-full shadow hover:bg-opacity-90 border-white">
-                Booking
-              </button>
-            </Link>
-            <Link to="/manage" className="text-white no-underline">
-              <button className="px-6 py-2 w-full md:w-[300px] h-[60px] md:ml-[50px] mt-[50px] md:mt-[100px] bg-white text-[#1B304F] text-lg md:text-[30px] rounded-full shadow hover:bg-opacity-90 border-blue-800">
-                Manager Booking
-              </button>
-            </Link>
-          </div>
-
-          {/* News Section */}
-          <div
-            className="mt-[50px] md:mt-[100px] mx-auto p-4 bg-gray-100 text-black text-base md:text-lg w-full md:w-[1000px] h-auto md:h-[40px] text-left pl-4 md:pl-10 flex items-center bg-cover bg-center rounded-lg"
-            style={{
-              backgroundImage: "url('/src/assets/News_bg.png')",
-            }}
-          >
-            <img
-              src="/src/assets/news.png"
-              alt="News icon"
-              className="h-5 w-5 mr-1"
-            />
-            <span className="font-semibold">News:</span>
-          </div>
-        </div>
-      </div>
+      <HeroSection />
 
       {/* Section 3: Recommendations */}
       <div className="p-8 md:p-20 bg-[#F2F4F7]">
@@ -173,7 +118,7 @@ export const HomePage: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-wrap justify-center gap-4 mt-6">
-          <button className="px-4 md:px-6 py-2 w-40 sm:w-[200px] md:w-[250px] h-[50px] sm:h-[60px] md:h-[80px] bg-[#1B304F] text-white rounded-full border-white hover:bg-blue-900 text-sm sm:text-lg md:text-[35px] mt-[20px] sm:mt-[50px] md:mt-[100px]">
+          <button className="px-4 md:px-6 py-2 w-40 sm:w-[200px] md:w-[250px] h-[50px] sm:h-[60px] md:h-[80px] bg-primary text-white rounded-full border-white hover:bg-blue-900 text-sm sm:text-lg md:text-[35px] mt-[20px] sm:mt-[50px] md:mt-[100px]">
             View More
           </button>
           <button className="px-4 md:px-6 py-2 w-40 sm:w-[200px] md:w-[250px] h-[50px] sm:h-[60px] md:h-[80px] bg-white text-[#1B304F] rounded-full border-[#1B304F] hover:bg-blue-100 text-sm sm:text-lg md:text-[35px] mt-[20px] sm:mt-[50px] md:mt-[100px]">

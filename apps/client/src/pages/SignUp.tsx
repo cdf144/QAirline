@@ -105,15 +105,15 @@ export const SelectButton: React.FC = () => {
   const handleButtonClick = (buttonName: string) => {
     // Reset button states
     if (bookingButton.current)
-      bookingButton.current.classList.remove("bg-[#1B304F]", "text-white");
+      bookingButton.current.classList.remove("bg-primary", "text-white");
     if (manageButton.current)
-      manageButton.current.classList.remove("bg-[#1B304F]", "text-white");
+      manageButton.current.classList.remove("bg-primary", "text-white");
 
     // Add selected state
     if (buttonName === "Booking" && bookingButton.current) {
-      bookingButton.current.classList.add("bg-[#1B304F]", "text-white");
+      bookingButton.current.classList.add("bg-primary", "text-white");
     } else if (buttonName === "Manage" && manageButton.current) {
-      manageButton.current.classList.add("bg-[#1B304F]", "text-white");
+      manageButton.current.classList.add("bg-primary", "text-white");
     }
   };
 
@@ -122,7 +122,7 @@ export const SelectButton: React.FC = () => {
       <Link to="/booking" className="text-white no-underline">
         <button
           ref={bookingButton}
-          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white focus:bg-[#1B304F] focus:text-white"
+          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white focus:bg-primary focus:text-white"
           onClick={() => handleButtonClick("Booking")}
         >
           Booking
@@ -131,7 +131,7 @@ export const SelectButton: React.FC = () => {
       <Link to="/manage" className="text-white no-underline">
         <button
           ref={manageButton}
-          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-[#1B304F] hover:text-white focus:bg-[#1B304F] focus:text-white"
+          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white focus:bg-primary focus:text-white"
           onClick={() => handleButtonClick("Manage")}
         >
           Manage
