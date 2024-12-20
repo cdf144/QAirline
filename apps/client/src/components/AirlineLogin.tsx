@@ -1,87 +1,90 @@
 import React, { useRef } from "react";
 import { Link } from "react-router-dom";
+import StandardLayout from "../layouts/Standard";
 
 export const AirlineLogin: React.FC = () => {
   return (
-    <div
-      className="flex flex-col justify-center items-center w-screen min-h-screen bg-cover bg-center px-4"
-      style={{
-        backgroundImage: "url('src/assets/bookingbg.jpg')",
-      }}
-    >
-      {/* Header */}
+    <StandardLayout>
       <div
-        className="w-full max-w-[600px] lg:h-[470px] lg:mt-[200px] shadow-md rounded-lg flex flex-col pt-10 bg-white bg-cover bg-center"
+        className="flex flex-col justify-center items-center w-screen min-h-screen bg-cover bg-center px-4"
         style={{
-          backgroundImage: "url('/src/assets/Booking_bg.png')",
+          backgroundImage: "url('src/assets/bookingbg.jpg')",
         }}
       >
-        <div className="px-6 py-6">
-          {/* Navigation Buttons */}
-          <SelectButton />
+        {/* Header */}
+        <div
+          className="w-full max-w-[600px] lg:h-[470px] lg:mt-[200px] shadow-md rounded-lg flex flex-col pt-10 bg-white bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/src/assets/Booking_bg.png')",
+          }}
+        >
+          <div className="px-6 py-6">
+            {/* Navigation Buttons */}
+            <SelectButton />
 
-          {/* Login Form */}
-          <h2 className="mb-4 text-lg lg:text-xl font-bold text-gray-700">
-            Login
-          </h2>
-          <form className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
-                Member number or email or phone
-              </label>
-              <input
-                type="text"
-                className="w-full px-3 py-2 mt-1 border bg-white rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-black"
-                placeholder="Enter your email or phone"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
-                Password
-              </label>
-              <div className="relative">
+            {/* Login Form */}
+            <h2 className="mb-4 text-lg lg:text-xl font-bold text-gray-700">
+              Login
+            </h2>
+            <form className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-600">
+                  Member number or email or phone
+                </label>
                 <input
-                  type="password"
-                  className="w-full px-3 py-2 mt-1 border rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-300 text-black"
-                  placeholder="Enter your password"
+                  type="text"
+                  className="w-full px-3 py-2 mt-1 border bg-white rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-black"
+                  placeholder="Enter your email or phone"
                 />
               </div>
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-600">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    className="w-full px-3 py-2 mt-1 border rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-300 text-black"
+                    placeholder="Enter your password"
+                  />
+                </div>
+              </div>
 
-            <div className="flex justify-end space-x-2 text-black text-sm lg:text-base">
-              <Link to="/signUp" className="text-white no-underline">
-                <a href="#" className="hover:underline text-black">
-                  Sign-up
-                </a>
-              </Link>
-              <span>|</span>
-              <Link to="/forgotPassword" className="text-white no-underline">
-                <a href="#" className="hover:underline text-black">
-                  Forgot your password
-                </a>
-              </Link>
-            </div>
+              <div className="flex justify-end space-x-2 text-black text-sm lg:text-base">
+                <Link to="/signup" className="text-white no-underline">
+                  <a href="#" className="hover:underline text-black">
+                    Sign-up
+                  </a>
+                </Link>
+                <span>|</span>
+                <Link to="/forgot-password" className="text-white no-underline">
+                  <a href="#" className="hover:underline text-black">
+                    Forgot your password
+                  </a>
+                </Link>
+              </div>
 
-            <button className="w-full py-2 mt-4 text-black text-lg lg:text-xl bg-yellow-500 rounded hover:bg-yellow-600">
-              LOGIN
-            </button>
-          </form>
+              <button className="w-full py-2 mt-4 text-black text-lg lg:text-xl bg-yellow-500 rounded hover:bg-yellow-600">
+                LOGIN
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* News Section */}
+        <div className="mt-[60px] h-10 w-full max-w-[1000px] p-4 bg-gray-100 text-black text-lg text-left flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
+          <img
+            src="/src/assets/docuicon.png"
+            alt="News icon"
+            className="h-5 w-5"
+          />
+          <span className="font-semibold ml-2">News:</span>
+          <span className="ml-2">
+            Discover the latest travel updates and promotions!
+          </span>
         </div>
       </div>
-
-      {/* News Section */}
-      <div className="mt-[60px] h-10 w-full max-w-[1000px] p-4 bg-gray-100 text-black text-lg text-left flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
-        <img
-          src="/src/assets/docuicon.png"
-          alt="News icon"
-          className="h-5 w-5"
-        />
-        <span className="font-semibold ml-2">News:</span>
-        <span className="ml-2">
-          Discover the latest travel updates and promotions!
-        </span>
-      </div>
-    </div>
+    </StandardLayout>
   );
 };
 

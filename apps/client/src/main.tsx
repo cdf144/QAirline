@@ -18,12 +18,12 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/login" element={<AirlineLogin />} />
         <Route path="/manage" element={<ManageBooking />} />
-        <Route path="/signUp" element={<SignUpPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
         <Route
           path="/recommend"
           element={<BookingPageAfterClickInRecommend />}
         />
-        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </Router>
   </StrictMode>,

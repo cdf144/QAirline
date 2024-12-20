@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import StandardLayout from "../layouts/Standard";
 
 export const HomePage: React.FC = () => {
+  const [isHeaderTransparent, setIsHeaderTransparent] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const firstSectionHeight =
+        document.getElementById("hero-section")?.offsetHeight || 0;
+      setIsHeaderTransparent(scrollPosition < firstSectionHeight);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col w-full h-full">
-      {/* Section 1: Header & Hero */}
+    <StandardLayout isHeaderTransparent={isHeaderTransparent}>
       <div
+        id="hero-section"
         className="relative h-screen bg-cover bg-center"
         style={{
           backgroundImage: "url('/src/assets/homebg.png')",
@@ -14,20 +31,6 @@ export const HomePage: React.FC = () => {
           backgroundPosition: "center",
         }}
       >
-        {/* Header */}
-        <div className="absolute top-0 right-0 flex p-6 space-x-4 z-10">
-          <Link to="/login">
-            <button className="w-32 md:w-40 h-5 md:h-10 bg-[#1B304F] text-white rounded-full border-white flex items-center justify-center">
-              Login
-            </button>
-          </Link>
-          <Link to="/signUP" className="text-white no-underline">
-            <button className="w-32 md:w-40 h-5 md:h-10 bg-white text-[#1B304F] rounded-full border-blue-800 flex items-center justify-center">
-              Sign Up
-            </button>
-          </Link>
-        </div>
-
         {/* Hero Content */}
         <div className="flex flex-col justify-center h-full text-center text-white px-4">
           <div className="relative flex items-start justify-start pl-4 md:pl-10 pt-20">
@@ -136,7 +139,7 @@ export const HomePage: React.FC = () => {
                 className="h-12 sm:h-16 md:h-20 w-12 sm:w-16 md:w-20"
               />
             </div>
-            <p className="mt-2 font-bold text-sm sm:text-lg md:text-[50px] mt-[20px] sm:mt-[50px] md:mt-[100px] mb-[20px] sm:mb-[50px] md:mb-[100px]">
+            <p className="mt-2 font-bold text-sm sm:text-lg md:text-[50px] sm:mt-[50px] md:mt-[100px] mb-[20px] sm:mb-[50px] md:mb-[100px]">
               Q&A 1
             </p>
           </div>
@@ -150,7 +153,7 @@ export const HomePage: React.FC = () => {
                 className="h-12 sm:h-16 md:h-20 w-12 sm:w-16 md:w-20"
               />
             </div>
-            <p className="mt-2 font-bold mr-10 text-sm sm:text-lg md:text-[50px] mt-[20px] sm:mt-[50px] md:mt-[100px] mb-[20px] sm:mb-[50px] md:mb-[100px]">
+            <p className="mt-2 font-bold mr-10 text-sm sm:text-lg md:text-[50px] sm:mt-[50px] md:mt-[100px] mb-[20px] sm:mb-[50px] md:mb-[100px]">
               Q&A 2
             </p>
           </div>
@@ -164,7 +167,7 @@ export const HomePage: React.FC = () => {
                 className="h-12 sm:h-16 md:h-20 w-12 sm:w-16 md:w-20"
               />
             </div>
-            <p className="mt-2 font-bold text-sm sm:text-lg md:text-[50px] mt-[20px] sm:mt-[50px] md:mt-[100px] mb-[20px] sm:mb-[50px] md:mb-[100px]">
+            <p className="mt-2 font-bold text-sm sm:text-lg md:text-[50px] sm:mt-[50px] md:mt-[100px] mb-[20px] sm:mb-[50px] md:mb-[100px]">
               Q&A 3
             </p>
           </div>
@@ -178,7 +181,7 @@ export const HomePage: React.FC = () => {
           </button>
         </div>
       </div>
-    </div>
+    </StandardLayout>
   );
 };
 
