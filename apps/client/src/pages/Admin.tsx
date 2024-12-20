@@ -259,7 +259,7 @@ const ChangeTimeForm = () => (
   </FormLayout>
 );
 
-export const Update: React.FC = () => {
+export const AdminPage: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedForm, setSelectedForm] = useState<string>("postInformation");
 

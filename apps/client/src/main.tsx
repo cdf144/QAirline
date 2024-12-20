@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { Update } from "./components/Update.tsx";
 import "./assets/css/index.css";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import { AdminPage } from "./pages/Admin.tsx";
 import { BookingPage } from "./pages/Booking.tsx";
 import BookingAfterRecommendPage from "./pages/BookingAfterRecommend.tsx";
 import ForgotPasswordPage from "./pages/ForgotPassword.tsx";
@@ -24,7 +24,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/recommend" element={<BookingAfterRecommendPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/update" element={<Update />} />
+          <Route path="/update" element={<AdminPage />} />
         </Routes>
       </Router>
     </AuthProvider>
