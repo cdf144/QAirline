@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { JwtPayloadClaims } from 'src/common/interfaces/jwt-payload.interface';
 import { LoginResult } from 'src/common/interfaces/login.interface';
 import { User } from 'src/modules/user/schemas/user.schema';
@@ -17,10 +18,13 @@ export class AuthService {
     password: string,
   ): Promise<Omit<User, 'password'> | null> {
     const foundUser = await this.userService.findOneByEmail(email);
-    if (foundUser && foundUser.password === password) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = foundUser;
-      return result;
+    if (foundUser) {
+      const isMatch = await bcrypt.compare(password, foundUser.password);
+      if (isMatch) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...result } = foundUser;
+        return result;
+      }
     }
     return null;
   }

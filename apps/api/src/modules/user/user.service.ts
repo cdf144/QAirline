@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
 import { isEmail, isPhoneNumber } from 'class-validator';
 import { FilterQuery, Model } from 'mongoose';
 import { normalizePhoneNumber } from 'src/utils/phone-number.util';
@@ -15,6 +16,11 @@ import { User, UserDocument } from './schemas/user.schema';
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+
+  async hashPassword(password: string): Promise<string> {
+    const saltOrRounds = await bcrypt.genSalt();
+    return await bcrypt.hash(password, saltOrRounds);
+  }
 
   async findAll(): Promise<User[]> {
     return this.userModel.find().lean().exec();
@@ -95,10 +101,11 @@ export class UserService {
       throw new InternalServerErrorException('Failed to create user');
     }
 
-    // TODO: Implement password hashing
+    const hashedPassword = await this.hashPassword(registerUserDto.password);
+
     const newUser = new this.userModel({
       email: registerUserDto.email,
-      password: registerUserDto.password,
+      password: hashedPassword,
       fullName: registerUserDto.fullName,
       sex: registerUserDto.sex,
       phone: normalizedRegPhone,
