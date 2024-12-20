@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import qairlineLogo from "../assets/qairline-logo.png";
+import { useAuth } from "../context/AuthContext";
 import FilledButton from "./buttons/Filled";
 
 interface HeaderProps {
@@ -8,6 +9,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ transparent }) => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-colors ${
@@ -23,16 +26,30 @@ const Header: React.FC<HeaderProps> = ({ transparent }) => {
           />
         </Link>
 
-        <div className="top-0 right-0 px-2 flex space-x-4 z-10">
-          <Link to="/login">
-            <FilledButton text="Login" color="white" textColor="neutral-700" />
-          </Link>
-          <Link to="/signup" className="text-white no-underline">
-            <FilledButton text="Sign Up" color="secondary" />
-          </Link>
-        </div>
+        {isAuthenticated ? <ProfileButton /> : <LoginSignupButtons />}
       </div>
     </header>
+  );
+};
+
+const LoginSignupButtons: React.FC = () => {
+  return (
+    <div className="top-0 right-0 px-2 flex space-x-4 z-10">
+      <Link to="/login">
+        <FilledButton text="Login" color="white" textColor="neutral-700" />
+      </Link>
+      <Link to="/signup" className="text-white no-underline">
+        <FilledButton text="Sign Up" color="secondary" />
+      </Link>
+    </div>
+  );
+};
+
+const ProfileButton: React.FC = () => {
+  return (
+    <Link to="/profile">
+      <FilledButton text="Profile" color="white" textColor="neutral-700" />
+    </Link>
   );
 };
 

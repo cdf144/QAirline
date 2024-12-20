@@ -1,9 +1,12 @@
+import "../../assets/css/loader.css";
+
 interface FilledPrimaryButtonProps
   extends React.ComponentPropsWithoutRef<"button"> {
   text: string;
   size?: keyof typeof sizeClasses;
   color?: string;
   textColor?: string;
+  loading?: boolean;
 }
 
 const sizeClasses = {
@@ -19,12 +22,14 @@ const FilledButton: React.FC<FilledPrimaryButtonProps> = ({
   size = "medium",
   color = "primary",
   textColor = "white",
+  loading = false,
 }) => {
   return (
     <button
-      className={`${sizeClasses[size]} px-3 py-1 bg-${color} hover:bg-${color}/75 rounded-full border border-none hover:border-solid text-base text-${textColor} font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden `}
+      className={`${sizeClasses[size]} px-3 py-1 bg-${color} hover:bg-${color}/75 rounded-full border border-none hover:border-solid text-base text-${textColor} font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden flex items-center justify-center`}
+      disabled={loading}
     >
-      {text}
+      {loading ? <div className="loader"></div> : text}
     </button>
   );
 };
