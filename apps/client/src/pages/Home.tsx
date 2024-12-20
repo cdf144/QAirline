@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import FlightsSection from "../components/FlightsSection";
 import HeroSection from "../components/HeroSection";
 import StandardLayout from "../layouts/Standard";
 
@@ -22,52 +23,7 @@ export const HomePage: React.FC = () => {
   return (
     <StandardLayout isHeaderTransparent={isHeaderTransparent}>
       <HeroSection />
-
-      {/* Section 3: Recommendations */}
-      <div className="p-8 md:p-20 bg-[#F2F4F7]">
-        <h2 className="text-center font-semibold text-2xl md:text-[50px] text-[#1B304F] mb-4 md:mb-[100px]">
-          RECOMMEND FOR YOU
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div
-              key={index}
-              className={`border rounded-lg shadow-lg overflow-hidden ${
-                index % 2 === 1
-                  ? "border-purple-500 border-2"
-                  : "border-blue-500 border-2"
-              }`}
-            >
-              <img
-                src="/src/assets/HCM.jpeg"
-                alt="Recommendation"
-                className="h-32 md:h-40 w-full object-cover"
-              />
-              <div className="p-4 text-[#1B304F] bg-white">
-                <h3 className="font-bold text-sm md:text-base">
-                  Từ Hà Nội (HAN) đến Thành phố Hồ Chí Minh (SGN)
-                </h3>
-                <p>Ngày đi: ab/cd/ef</p>
-                <p>Chỉ từ (VND)</p>
-                <p className="font-bold text-lg text-[20px] md:text-[30px] text-right mb-2 mt-2">
-                  8,688,668
-                </p>
-                <p className="text-gray-500 text-sm">Một chiều/Phổ thông</p>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="text-center mt-6">
-          <button
-            className="px-10 py-4 bg-white border-2 border-[#7FF4E1] text-[#1B304F] font-bold text-lg md:text-2xl rounded-lg hover:bg-green-100 shadow-[0_0_5px_#6ee7b7] mt-[30px] md:mt-[60px]"
-            style={{
-              textShadow: "0 0 3px #6ee7b7, 0 0 10px #6ee7b7",
-            }}
-          >
-            VIEW MORE
-          </button>
-        </div>
-      </div>
+      <FlightsSection />
 
       {/* Section 4: FAQs */}
       <div className="p-4 md:p-12 bg-gray-100">

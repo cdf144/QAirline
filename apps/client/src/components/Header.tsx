@@ -10,7 +10,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ transparent }) => {
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-colors duration-300 ${
+      className={`fixed top-0 left-0 w-full z-50 transition-colors ${
         transparent ? "bg-transparent" : "bg-primary shadow-md"
       }`}
     >
