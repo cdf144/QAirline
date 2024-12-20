@@ -17,6 +17,9 @@ async function bootstrap() {
   );
   const configService = app.get(ConfigService);
 
+  app.enableCors({
+    credentials: true,
+  });
   app.register(fastifyCookie);
   app.useGlobalPipes(
     new ValidationPipe({
