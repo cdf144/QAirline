@@ -106,7 +106,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   onSubmit,
 }) => (
   <div
-    className={`bg-white p-8 rounded-md shadow-lg w-11/12 md:w-8/12 space-y-6 ${className}`}
+    className={`bg-white p-8 rounded-3xl shadow-lg w-11/12 md:w-8/12 space-y-6 ${className}`}
   >
     <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
       {title}
@@ -290,37 +290,92 @@ const CreateFlightForm: React.FC<{
   );
 };
 
-const BookingStatsPage = () => (
-  <div className="space-y-5 w-11/12 md:w-8/12">
-    <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
-      <div className="flex w-full items-center justify-between p-4 bg-green-100 rounded-2xl h-24">
-        <span className="text-4xl font-bold text-green-600">5 Lakhs</span>
-        <span className="text-gray-600 text-lg">Today's Booking</span>
-      </div>
-    </div>
+const BookingStatsPage = () => {
+  const [todaysBooking, setTodaysBooking] = useState(0);
+  const [todaysFlight, setTodaysFlight] = useState(0);
+  const [monthBooking, setMonthBooking] = useState(0);
 
-    <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
-      <div className="flex w-full items-center justify-between p-4 bg-blue-100 rounded-lg h-24">
-        <span className="text-4xl font-bold text-blue-600">60 Nos</span>
-        <span className="text-gray-600 text-lg">Today's Fly Flight</span>
-      </div>
-    </div>
+  useEffect(() => {
+    fetch(
+      new URL(
+        "/v1/booking/stats/today",
+        import.meta.env.VITE_API_BASE_URL,
+      ).toString(),
+      {
+        credentials: "include",
+      },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setTodaysBooking(data.count);
+      });
 
-    <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
-      <div className="flex w-full items-center justify-between p-4 bg-red-100 rounded-lg h-24">
-        <span className="text-4xl font-bold text-red-600">10 Nos</span>
-        <span className="text-gray-600 text-lg">30 day's Booking</span>
-      </div>
-    </div>
+    fetch(
+      new URL(
+        "/v1/flight/stats/today",
+        import.meta.env.VITE_API_BASE_URL,
+      ).toString(),
+      {
+        credentials: "include",
+      },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setTodaysFlight(data.count);
+      });
 
-    <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
-      <div className="flex w-full items-center justify-between p-4 bg-yellow-100 rounded-lg h-24">
-        <span className="text-4xl font-bold text-yellow-600">90 Per</span>
-        <span className="text-gray-600 text-lg">Proceeds</span>
+    fetch(
+      new URL(
+        "/v1/booking/stats/this-month",
+        import.meta.env.VITE_API_BASE_URL,
+      ).toString(),
+      {
+        credentials: "include",
+      },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setMonthBooking(data.count);
+      });
+  }, []);
+
+  return (
+    <div className="space-y-5 w-11/12 md:w-8/12">
+      <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl justify-center">
+        <div className="flex w-full items-center justify-between p-4 bg-green-100 rounded-2xl h-24">
+          <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-green-600">
+            {todaysBooking} Bookings
+          </span>
+          <span className="text-gray-600 text-md md:text-lg">
+            Today's Booking
+          </span>
+        </div>
+      </div>
+
+      <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
+        <div className="flex w-full items-center justify-between p-4 bg-blue-100 rounded-lg h-24">
+          <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-blue-600">
+            {todaysFlight} Flights
+          </span>
+          <span className="text-gray-600 text-md md:text-lg">
+            Today's Fly Flight
+          </span>
+        </div>
+      </div>
+
+      <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
+        <div className="flex w-full items-center justify-between p-4 bg-red-100 rounded-lg h-24">
+          <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-red-600">
+            {monthBooking} Bookings
+          </span>
+          <span className="text-gray-600 text-md md:text-lg">
+            This Month's Booking
+          </span>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const RegisterAircraftForm: React.FC<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

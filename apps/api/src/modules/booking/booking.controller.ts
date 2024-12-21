@@ -57,6 +57,20 @@ export class BookingController {
     res.send(booking);
   }
 
+  @Roles(Role.Admin)
+  @Get('stats/today')
+  async countBookingsToday() {
+    const count = await this.bookingService.countBookingsToday();
+    return { count };
+  }
+
+  @Roles(Role.Admin)
+  @Get('stats/this-month')
+  async countBookingsThisMonth() {
+    const count = await this.bookingService.countBookingsThisMonth();
+    return { count };
+  }
+
   @Post()
   async create(
     @Res() res: FastifyReply,

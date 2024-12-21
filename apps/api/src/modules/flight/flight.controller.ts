@@ -62,6 +62,13 @@ export class FlightController {
   }
 
   @Roles(Role.Admin)
+  @Get('stats/today')
+  async countFlightsToday() {
+    const count = await this.flightService.countFlightsToday();
+    return { count };
+  }
+
+  @Roles(Role.Admin)
   @Post()
   async create(
     @Res() res: FastifyReply,

@@ -48,6 +48,20 @@ export class FlightService {
       });
   }
 
+  async countFlightsToday(): Promise<number> {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return this.flightModel
+      .countDocuments({
+        departureTime: { $gte: startOfDay, $lte: endOfDay },
+      })
+      .exec();
+  }
+
   async create(createFlightDto: CreateFlightDto) {
     const code = await this.generateUniqueCode();
     const aircraftObjectId = Types.ObjectId.createFromHexString(

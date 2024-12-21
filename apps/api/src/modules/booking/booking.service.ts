@@ -54,6 +54,37 @@ export class BookingService {
       });
   }
 
+  async countBookingsToday(): Promise<number> {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const count = await this.bookingModel.countDocuments({
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
+    });
+
+    return count;
+  }
+
+  async countBookingsThisMonth(): Promise<number> {
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const endOfMonth = new Date();
+    endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+    endOfMonth.setDate(0);
+    endOfMonth.setHours(23, 59, 59, 999);
+
+    const count = await this.bookingModel.countDocuments({
+      createdAt: { $gte: startOfMonth, $lte: endOfMonth },
+    });
+
+    return count;
+  }
+
   async create(createBookingDto: CreateBookingDto): Promise<Booking> {
     const code = await this.generateBookingCode();
     const userObjectId = Types.ObjectId.createFromHexString(
