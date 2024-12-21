@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import formBg from "../assets/Booking_bg.png";
-import bookingBg from "../assets/bookingbg.jpg";
+import bookingBgSquare from "../assets/booking-bg-square.jpg";
 import FilledButton from "../components/buttons/Filled";
 import OutlinedButton from "../components/buttons/Outlined";
 import { useAuth } from "../context/AuthContext";
@@ -54,7 +54,7 @@ export const LoginPage: React.FC = () => {
       <div
         className="flex flex-col justify-center items-center w-screen min-h-screen bg-cover bg-center px-4"
         style={{
-          backgroundImage: `url(${bookingBg})`,
+          backgroundImage: `url(${bookingBgSquare})`,
         }}
       >
         <div

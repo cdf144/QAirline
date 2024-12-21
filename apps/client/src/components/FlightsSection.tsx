@@ -6,7 +6,7 @@ const FlightsSection: React.FC = () => {
   return (
     <div className="p-8 md:p-20 bg-[#F2F4F7]">
       <div className="text-center text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold m-4 md:m-16">
-        Xem các chuyến bay
+        Browse Flights
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -25,11 +25,10 @@ const FlightsSection: React.FC = () => {
               className="h-32 md:h-40 w-full object-cover"
             />
             <div className="p-4 text-[#1B304F] bg-white">
-              <h3 className="font-bold text-sm md:text-base">
-                Từ Hà Nội (HAN) đến Thành phố Hồ Chí Minh (SGN)
-              </h3>
-              <p>Ngày đi: ab/cd/ef</p>
-              <p>Chỉ từ (VND)</p>
+              <h3 className="font-bold text-sm md:text-base">HAN - SGN</h3>
+              <p>Departure:</p>
+              <p>Arrival:</p>
+              <p>From (VND)</p>
               <p className="font-bold text-lg text-[20px] md:text-[30px] text-right mb-2 mt-2">
                 8,688,668
               </p>
@@ -41,7 +40,7 @@ const FlightsSection: React.FC = () => {
 
       <div className="flex justify-center m-12 mt-16">
         <Link to="/">
-          <OutlinedButton text="Xem thêm" size="extraLarge" />
+          <OutlinedButton text="View more" size="extraLarge" />
         </Link>
       </div>
     </div>

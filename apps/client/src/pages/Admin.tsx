@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import bookingIcon from "../assets/booking.png";
-import bookingBg from "../assets/bookingbg.jpg";
+import bookingBgSquare from "../assets/booking-bg-square.jpg";
+import bookingIcon from "../assets/booking-icon.png";
 import delayIcon from "../assets/delay.png";
-import flightIcon from "../assets/flight.png";
+import flightIcon from "../assets/flight-icon.png";
 import noteIcon from "../assets/note.png";
 import planeIcon from "../assets/plane.png";
 import FilledButton from "../components/buttons/Filled";
@@ -578,7 +578,7 @@ export const AdminPage: React.FC = () => {
     <div
       className="flex w-screen min-h-screen"
       style={{
-        backgroundImage: `url(${bookingBg})`,
+        backgroundImage: `url(${bookingBgSquare})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

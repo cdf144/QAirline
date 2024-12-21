@@ -6,7 +6,6 @@ import PrivateRoute from "./components/PrivateRoute.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { AdminPage } from "./pages/Admin.tsx";
 import { BookingPage } from "./pages/Booking.tsx";
-import BookingAfterRecommendPage from "./pages/BookingAfterRecommend.tsx";
 import ForgotPasswordPage from "./pages/ForgotPassword.tsx";
 import { HomePage } from "./pages/Home.tsx";
 import { LoginPage } from "./pages/Login.tsx";
@@ -23,7 +22,6 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/login" element={<LoginPage />} />
           <Route path="/manage" element={<ManageBookingPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/recommend" element={<BookingAfterRecommendPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route
             path="/admin"

@@ -1,4 +1,6 @@
 import React from "react";
+import bookingBgSquare from "../assets/booking-bg-square.jpg";
+import docIcon from "../assets/doc-icon.png";
 import StandardLayout from "../layouts/Standard";
 
 export const ManageBookingPage: React.FC = () => {
@@ -7,7 +9,7 @@ export const ManageBookingPage: React.FC = () => {
       <div
         className="flex flex-col justify-center items-center w-screen min-h-screen bg-cover bg-center px-4"
         style={{
-          backgroundImage: "url('/src/assets/bookingbg.jpg')",
+          backgroundImage: `url(${bookingBgSquare})`,
         }}
       >
         <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl mt-[250px]">
@@ -55,11 +57,7 @@ export const ManageBookingPage: React.FC = () => {
           </div>
         </div>
         <div className="mt-[80px] h-10 w-full max-w-[1000px] p-4 bg-gray-100 text-black text-lg text-left flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
-          <img
-            src="/src/assets/docuicon.png"
-            alt="News icon"
-            className="h-5 w-5"
-          />
+          <img src={docIcon} alt="News icon" className="h-5 w-5" />
           <span className="font-semibold ml-2">News:</span>
           <span className="ml-2">
             Discover the latest travel updates and promotions!
