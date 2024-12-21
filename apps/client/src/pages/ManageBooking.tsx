@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FilledButton from "../components/buttons/Filled";
+import OutlinedButton from "../components/buttons/Outlined";
 import { useAuth } from "../context/AuthContext";
 import StandardLayout from "../layouts/Standard";
 
@@ -34,6 +34,7 @@ interface Airport {
 export const ManageBookingPage: React.FC = () => {
   const { email } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -95,11 +96,17 @@ export const ManageBookingPage: React.FC = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to cancel booking");
+        const data = await response.json();
+        throw new Error(data.message);
       }
 
       setBookings(bookings.filter((booking) => booking._id !== bookingId));
     } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
       console.error("Error cancelling booking:", error);
     }
   };
@@ -108,6 +115,7 @@ export const ManageBookingPage: React.FC = () => {
     <StandardLayout>
       <div className="flex flex-col justify-start items-center w-screen min-h-screen px-4 text-black pt-32">
         <h1 className="text-3xl font-bold mb-4">Manage Bookings</h1>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         {bookings.map((booking) => (
           <div
             key={booking._id}
@@ -164,10 +172,9 @@ export const ManageBookingPage: React.FC = () => {
                 )}
               </div>
             ))}
-            <FilledButton
+            <OutlinedButton
               text="Cancel Booking"
               onClick={() => handleCancelBooking(booking._id)}
-              color="red-500"
             />
           </div>
         ))}

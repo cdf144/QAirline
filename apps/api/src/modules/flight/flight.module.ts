@@ -10,5 +10,6 @@ import { Flight, FlightSchema } from './schemas/flight.schema';
   ],
   providers: [FlightService],
   controllers: [FlightController],
+  exports: [FlightService],
 })
 export class FlightModule {}

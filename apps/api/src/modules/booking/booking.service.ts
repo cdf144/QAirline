@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { FlightService } from '../flight/flight.service';
 import { TicketService } from '../ticket/ticket.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { Booking } from './schemas/booking.schema';
@@ -15,6 +16,7 @@ export class BookingService {
   constructor(
     @InjectModel(Booking.name) private bookingModel: Model<Booking>,
     private readonly ticketService: TicketService,
+    private readonly flightService: FlightService,
   ) {}
 
   async findAll(): Promise<Booking[]> {
@@ -161,7 +163,39 @@ export class BookingService {
 
   async deleteBookingAndTickets(bookingId: string): Promise<void> {
     const bookingObjectId = Types.ObjectId.createFromHexString(bookingId);
-    await this.ticketService.deleteByBookingId(bookingObjectId);
+    const tickets = await this.ticketService.findByBookingId(
+      bookingObjectId.toString(),
+    );
+
+    const now = new Date();
+    const twentyFourHoursFromNow = new Date(
+      now.getTime() + 24 * 60 * 60 * 1000,
+    );
+
+    for (const ticket of tickets) {
+      const outboundFlight = await this.flightService.findOneById(
+        ticket.outboundFlightId._id.toString(),
+      );
+      // If flight already departed, it does not matter because there's no point in cancelling a past booking
+      if (new Date(outboundFlight.departureTime) <= twentyFourHoursFromNow) {
+        throw new BadRequestException(
+          'Cannot cancel booking for a flight that is about to fly within 24 hours',
+        );
+      }
+
+      if (ticket.returnFlightId) {
+        const returnFlight = await this.flightService.findOneById(
+          ticket.returnFlightId._id.toString(),
+        );
+        if (new Date(returnFlight.departureTime) <= twentyFourHoursFromNow) {
+          throw new BadRequestException(
+            'Cannot cancel booking for a flight that is about to fly within 24 hours',
+          );
+        }
+      }
+    }
+
+    await this.ticketService.deleteByBookingId(bookingObjectId.toString());
     await this.bookingModel.findByIdAndDelete(bookingObjectId).exec();
   }
 

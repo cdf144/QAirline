@@ -138,7 +138,6 @@ export class TicketService {
   }
 
   async delete(id: string): Promise<Ticket> {
-    // TODO: Perform validation to prevent ticket cannot be deleted if departure time is less than 24 hours
     return this.ticketModel
       .findByIdAndDelete(id, { returnDocument: 'before' })
       .lean()
@@ -163,7 +162,7 @@ export class TicketService {
       });
   }
 
-  async deleteByBookingId(bookingId: Types.ObjectId): Promise<void> {
+  async deleteByBookingId(bookingId: string): Promise<void> {
     await this.ticketModel.deleteMany({ bookingId }).exec();
   }
 }
