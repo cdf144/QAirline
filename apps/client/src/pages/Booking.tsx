@@ -1,200 +1,173 @@
-import React, { useRef } from "react";
-import bookingBgSquare from "../assets/booking-bg-square.jpg";
-import docIcon from "../assets/doc-icon.png";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import FilledButton from "../components/buttons/Filled";
+import OutlinedButton from "../components/buttons/Outlined";
+import { useAuth } from "../context/AuthContext";
 import StandardLayout from "../layouts/Standard";
 
+interface BookingInfo {
+  flightCode: string;
+  price: string;
+}
+
+interface TicketInfo {
+  seat: string;
+  classType: string;
+}
+
 export const BookingPage: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { flightCode, price } = location.state as BookingInfo;
+  const { email } = useAuth();
+  const [tickets, setTickets] = useState<TicketInfo[]>([]);
+  const [seat, setSeat] = useState("");
+  const [classType, setClassType] = useState("economy");
+  const [loading, setLoading] = useState(false);
+
+  const addTicket = () => {
+    setTickets([...tickets, { seat, classType }]);
+    setSeat("");
+  };
+
+  const handleBooking = async () => {
+    setLoading(true);
+
+    try {
+      const userResponse = await fetch(
+        new URL(
+          `/v1/user/${email}`,
+          import.meta.env.VITE_API_BASE_URL,
+        ).toString(),
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+
+      if (!userResponse.ok) {
+        throw new Error("Failed to fetch user");
+      }
+
+      const userData = await userResponse.json();
+      const userId = userData._id;
+
+      const flightResponse = await fetch(
+        new URL(
+          `/v1/flight/${flightCode}`,
+          import.meta.env.VITE_API_BASE_URL,
+        ).toString(),
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+
+      if (!flightResponse.ok) {
+        throw new Error("Failed to fetch flight");
+      }
+
+      const flightData = await flightResponse.json();
+      const flightId = flightData._id;
+
+      const bookingResponse = await fetch(
+        new URL("/v1/booking", import.meta.env.VITE_API_BASE_URL).toString(),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            classType,
+          }),
+          credentials: "include",
+        },
+      );
+
+      if (!bookingResponse.ok) {
+        throw new Error("Failed to create booking");
+      }
+
+      const bookingData = await bookingResponse.json();
+      const bookingId = bookingData._id;
+
+      for (const ticket of tickets) {
+        await fetch(
+          new URL("/v1/ticket", import.meta.env.VITE_API_BASE_URL).toString(),
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bookingId,
+              tripType: "oneway",
+              outboundFlightId: flightId,
+              seat: ticket.seat,
+              totalPrice: price,
+            }),
+            credentials: "include",
+          },
+        );
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.error("Error creating booking and tickets:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <StandardLayout>
-      <div
-        className="flex flex-col justify-center items-center w-screen min-h-screen bg-cover bg-center px-4"
-        style={{
-          backgroundImage: `url(${bookingBgSquare})`,
-        }}
-      >
-        {/* Search Box */}
-        <div
-          className="bg-white rounded-lg shadow-lg w-[90%] max-w-[800px] p-6 md:p-8 bg-cover bg-center mx-auto mt-[150px]"
-          style={{
-            backgroundImage: "url('/src/assets/Booking_bg.png')",
-          }}
-        >
-          {/* Tabs */}
-          <SelectButton />
+      <div className="flex flex-col justify-center items-center w-screen min-h-screen px-4 text-black">
+        <h1 className="text-3xl font-bold mb-4">Booking</h1>
+        <p className="text-xl mb-2">Flight Code: {flightCode}</p>
+        <p className="text-xl mb-2">Price: {price}</p>
+        <p className="text-xl mb-2">User Email: {email}</p>
 
-          {/* Flight Type Radio Buttons */}
-          <div className="mb-6 mt-8 flex flex-col md:flex-row justify-start space-y-4 md:space-y-0 md:space-x-10">
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="one-way"
-                name="flight-type"
-                className="mr-2 w-5 h-5"
-              />
-              <label htmlFor="one-way" className="text-gray-500 font-semibold">
-                One Way
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="round-trip"
-                name="flight-type"
-                className="mr-2 w-5 h-5"
-              />
-              <label
-                htmlFor="round-trip"
-                className="text-gray-500 font-semibold"
-              >
-                Round Trip
-              </label>
-            </div>
-          </div>
-
-          {/* Input Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            {/* From Input */}
-            <div>
-              <p className="text-black">From</p>
-              <input
-                type="text"
-                placeholder="Departure"
-                className="w-full p-3 border rounded-lg bg-white border-[#1B304F] text-black"
-              />
-            </div>
-
-            {/* To Input */}
-            <div>
-              <p className="text-black">To</p>
-              <input
-                type="text"
-                placeholder="Destination"
-                className="w-full p-3 border rounded-lg bg-white border-[#1B304F] text-black"
-              />
-            </div>
-
-            {/* Depart Input */}
-            <div className="relative">
-              <p className="text-black">Depart</p>
-              <div className="flex items-center">
-                <input
-                  type="date"
-                  className="w-full p-3 border rounded-lg placeholder-gray-400 bg-white border-[#1B304F] text-black pr-10"
-                />
-                <img
-                  src="/src/assets/lich.png"
-                  alt="Calendar icon"
-                  className="absolute right-3 top-[50%] translate-y-[-50%] w-[20px] h-[20px] pointer-events-none"
-                />
-              </div>
-            </div>
-
-            {/* Return Input */}
-            <div className="relative">
-              <p className="text-black">Return</p>
-              <div className="flex items-center">
-                <input
-                  type="date"
-                  className="w-full p-3 border rounded-lg placeholder-gray-400 bg-white border-[#1B304F] text-black pr-10"
-                />
-                <img
-                  src="/src/assets/lich.png"
-                  alt="Calendar icon"
-                  className="absolute right-3 top-[50%] translate-y-[-50%] w-[20px] h-[20px] pointer-events-none"
-                />
-              </div>
-            </div>
-
-            {/* Passengers Input */}
-            <div>
-              <p className="text-black">Passengers</p>
-              <input
-                type="number"
-                placeholder="Number of Passengers"
-                className="w-full p-3 border rounded-lg bg-white border-[#1B304F] text-black"
-                min="1"
-              />
-            </div>
-
-            {/* Promotion Code Input */}
-            <div>
-              <p className="text-black">Promotion Code</p>
-              <input
-                type="text"
-                placeholder="Enter Promo Code"
-                className="w-full p-3 border rounded-lg bg-white border-[#1B304F] text-black"
-              />
-            </div>
-          </div>
-
-          {/* Button */}
-          <div className="mt-6 flex justify-center">
-            <button className="px-8 py-4 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 w-full max-w-[600px] text-lg md:text-2xl">
-              FIND FLIGHT
-            </button>
-          </div>
+        <div className="flex flex-col items-center mb-4">
+          <input
+            type="text"
+            placeholder="Seat"
+            value={seat}
+            onChange={(e) => setSeat(e.target.value)}
+            className="p-2 border border-gray-300 rounded mb-2"
+          />
+          <select
+            value={classType}
+            onChange={(e) => setClassType(e.target.value)}
+            className="p-2 border border-gray-300 rounded mb-2"
+          >
+            <option value="economy">Economy</option>
+            <option value="business">Business</option>
+          </select>
+          <OutlinedButton text="Add Ticket" onClick={addTicket} />
         </div>
 
-        {/* News Section */}
-        <div className="mt-[50px] h-10 w-full max-w-[1000px] p-4 bg-gray-100 text-black text-lg text-left flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
-          <img src={docIcon} alt="News icon" className="h-5 w-5" />
-          <span className="font-semibold ml-2">News:</span>
-          <span className="ml-2">
-            Discover the latest travel updates and promotions!
-          </span>
+        <div className="mb-4">
+          {tickets.map((ticket, index) => (
+            <div
+              key={index}
+              className="p-2 border border-gray-300 rounded mb-2"
+            >
+              <p>Seat: {ticket.seat}</p>
+              <p>Class Type: {ticket.classType}</p>
+            </div>
+          ))}
         </div>
+
+        <FilledButton
+          text="Confirm Booking"
+          onClick={handleBooking}
+          size="large"
+          loading={loading}
+        />
       </div>
     </StandardLayout>
   );
 };
 
-export const SelectButton: React.FC = () => {
-  const cashButton = useRef<HTMLButtonElement | null>(null);
-  const milesButton = useRef<HTMLButtonElement | null>(null);
-  const cashMilesButton = useRef<HTMLButtonElement | null>(null);
-
-  const handleButtonClick = (buttonName: string) => {
-    if (cashButton.current)
-      cashButton.current.classList.remove("bg-primary", "text-white");
-    if (milesButton.current)
-      milesButton.current.classList.remove("bg-primary", "text-white");
-    if (cashMilesButton.current)
-      cashMilesButton.current.classList.remove("bg-primary", "text-white");
-
-    if (buttonName === "Cash" && cashButton.current) {
-      cashButton.current.classList.add("bg-primary", "text-white");
-    } else if (buttonName === "Miles" && milesButton.current) {
-      milesButton.current.classList.add("bg-primary", "text-white");
-    } else if (buttonName === "Cash & Miles" && cashMilesButton.current) {
-      cashMilesButton.current.classList.add("bg-primary", "text-white");
-    }
-  };
-
-  return (
-    <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4">
-      <button
-        ref={cashButton}
-        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white"
-        onClick={() => handleButtonClick("Cash")}
-      >
-        Cash
-      </button>
-      <button
-        ref={milesButton}
-        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white"
-        onClick={() => handleButtonClick("Miles")}
-      >
-        Miles
-      </button>
-      <button
-        ref={cashMilesButton}
-        className="w-full md:w-[200px] font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white"
-        onClick={() => handleButtonClick("Cash & Miles")}
-      >
-        Cash & Miles
-      </button>
-    </div>
-  );
-};
-
-export default SelectButton;
+export default BookingPage;

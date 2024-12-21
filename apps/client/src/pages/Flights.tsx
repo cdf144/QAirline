@@ -1,6 +1,7 @@
 import Fuse from "fuse.js";
 import React, { useEffect, useState } from "react";
 import Autosuggest from "react-autosuggest";
+import { useNavigate } from "react-router-dom";
 import HANPoster from "../assets/HAN.png";
 import SGNPoster from "../assets/HCM.jpeg";
 import StandardLayout from "../layouts/Standard";
@@ -31,6 +32,7 @@ export const FlightsPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<FlightInfoFull[]>([]);
+  const navigate = useNavigate();
 
   const flightsPerPage = 16;
 
@@ -62,6 +64,10 @@ export const FlightsPage: React.FC = () => {
 
     fetchFlights();
   }, []);
+
+  const handleFlightClick = (flightCode: string, price: string) => {
+    navigate("/booking", { state: { flightCode, price } });
+  };
 
   // Fuzzy search
   const fuse = new Fuse(flights, {
@@ -151,11 +157,12 @@ export const FlightsPage: React.FC = () => {
           {currentFlights.map((flight, index) => (
             <div
               key={index}
-              className={`border rounded-lg shadow-lg overflow-hidden ${
+              className={`border rounded-lg shadow-lg overflow-hidden cursor-pointer ${
                 index % 2 === 1
                   ? "border-tertiary border-2"
                   : "border-secondary border-2"
               }`}
+              onClick={() => handleFlightClick(flight.code, flight.price)}
             >
               <img
                 src={

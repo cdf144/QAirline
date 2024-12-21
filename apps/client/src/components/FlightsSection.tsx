@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import HANPoster from "../assets/HAN.png";
 import SGNPoster from "../assets/HCM.jpeg";
 import OutlinedButton from "./buttons/Outlined";
@@ -27,6 +27,7 @@ interface FlightInfoFull {
 
 const FlightsSection: React.FC = () => {
   const [flights, setFlights] = useState<FlightInfoFull[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFlights = async () => {
@@ -56,6 +57,10 @@ const FlightsSection: React.FC = () => {
     fetchFlights();
   }, []);
 
+  const handleFlightClick = (flightCode: string, price: string) => {
+    navigate("/booking", { state: { flightCode, price } });
+  };
+
   return (
     <div className="p-8 md:p-20 bg-[#F2F4F7]">
       <div className="text-center text-primary text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold m-4 md:m-16">
@@ -66,11 +71,12 @@ const FlightsSection: React.FC = () => {
         {flights.map((flight, index) => (
           <div
             key={index}
-            className={`border rounded-lg shadow-lg overflow-hidden ${
+            className={`border rounded-lg shadow-lg overflow-hidden cursor-pointer ${
               index % 2 === 1
                 ? "border-tertiary border-2"
                 : "border-secondary border-2"
             }`}
+            onClick={() => handleFlightClick(flight.code, flight.price)}
           >
             <img
               src={

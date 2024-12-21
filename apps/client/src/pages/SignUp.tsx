@@ -134,12 +134,12 @@ export const SignUpPage: React.FC = () => {
 const SelectButton: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8 mb-6">
-      <Link to="/booking" className="text-white no-underline">
-        <OutlinedButton text="Booking" size="large" />
+      <Link to="/flights" className="text-white no-underline">
+        <OutlinedButton text="Browse Flights" size="large" />
       </Link>
 
-      <Link to="/manage" className="text-white no-underline">
-        <OutlinedButton text="Manage Booking" size="large" />
+      <Link to="/blog" className="text-white no-underline">
+        <OutlinedButton text="View Blogs" size="large" />
       </Link>
     </div>
   );
