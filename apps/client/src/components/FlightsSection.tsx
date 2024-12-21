@@ -48,7 +48,6 @@ const FlightsSection: React.FC = () => {
 
         const data = await response.json();
         setFlights(data.slice(0, 8));
-        console.log("Fetched flights:", data);
       } catch (error) {
         console.error("Error fetching flights:", error);
       }
@@ -89,8 +88,10 @@ const FlightsSection: React.FC = () => {
                 {flight.destinationAirportId.city} (
                 {flight.destinationAirportId.code})
               </h3>
-              <p>Departure: {flight.departureTime.toLocaleString()}</p>
-              <p>Arrival: {flight.arrivalTime.toLocaleString()}</p>
+              <p>
+                Departure: {new Date(flight.departureTime).toLocaleString()}
+              </p>
+              <p>Arrival: {new Date(flight.departureTime).toLocaleString()}</p>
               <p className="mt-2">From (VND)</p>
               <p className="font-bold text-lg text-[20px] md:text-[30px] text-right mb-2 mt-2">
                 {flight.price}
