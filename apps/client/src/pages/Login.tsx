@@ -128,7 +128,7 @@ export const LoginPage: React.FC = () => {
   );
 };
 
-export const SelectButton: React.FC = () => {
+const SelectButton: React.FC = () => {
   return (
     <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8 mb-6">
       <Link to="/booking" className="text-white no-underline">

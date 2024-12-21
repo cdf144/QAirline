@@ -1,10 +1,57 @@
-import React, { useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import formBg from "../assets/Booking_bg.png";
 import bookingBgSquare from "../assets/booking-bg-square.jpg";
-import docIcon from "../assets/doc-icon.png";
+import FilledButton from "../components/buttons/Filled";
+import OutlinedButton from "../components/buttons/Outlined";
+import { useAuth } from "../context/AuthContext";
 import StandardLayout from "../layouts/Standard";
 
 export const SignUpPage: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        new URL(
+          "/v1/user/register",
+          import.meta.env.VITE_API_BASE_URL,
+        ).toString(),
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email, password: password }),
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Sign up failed");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      await login(email, password);
+      navigate("/");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setError("Sign up failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <StandardLayout>
       <div
@@ -13,32 +60,34 @@ export const SignUpPage: React.FC = () => {
           backgroundImage: `url(${bookingBgSquare})`,
         }}
       >
-        {/* Header */}
         <div
-          className="w-full max-w-[600px] lg:h-[550px] lg:mt-[150px] shadow-md rounded-lg flex flex-col pt-10 bg-white bg-cover bg-center"
+          className="w-full max-w-screen-md mt-12 shadow-md rounded-3xl flex flex-col pt-10 bg-white bg-cover bg-center"
           style={{
-            backgroundImage: "url('/src/assets/Booking_bg.png')",
+            backgroundImage: `url(${formBg})`,
           }}
         >
           <div className="px-6 py-6">
-            {/* Navigation Buttons */}
             <SelectButton />
 
-            {/* Login Form */}
-            <h2 className="mb-4 text-lg lg:text-xl font-bold text-gray-700">
-              SIGN UP
-            </h2>
-            <form className="space-y-4">
+            <div className="my-4 text-lg lg:text-xl font-bold text-gray-700">
+              Sign Up
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-600">
-                  Member number or email or phone
+                  Email
                 </label>
                 <input
                   type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   className="w-full px-3 py-2 mt-1 border bg-white rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-black"
-                  placeholder="Enter your email or phone"
+                  placeholder="Enter your email"
                 />
               </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-600">
                   Password
@@ -46,95 +95,54 @@ export const SignUpPage: React.FC = () => {
                 <div className="relative">
                   <input
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                     className="w-full px-3 py-2 mt-1 border rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-300 text-black"
                     placeholder="Enter your password"
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Re-fill Password
-                </label>
-                <div className="relative">
-                  <input
-                    type="re-fill_password"
-                    className="w-full px-3 py-2 mt-1 border rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-300 text-black"
-                    placeholder="Enter your password"
-                  />
-                </div>
-              </div>
+
+              {error && <p className="text-red-500 text-md italic">{error}</p>}
+
               <div className="flex justify-end space-x-2 text-black text-sm lg:text-base">
-                <Link to="/login" className="text-white no-underline">
-                  <a href="#" className="hover:underline text-black">
-                    Login
-                  </a>
+                <Link to="/signup" className="text-white no-underline">
+                  <span className="hover:underline text-black">Login</span>
                 </Link>
+
                 <span>|</span>
+
                 <Link to="/forgot-password" className="text-white no-underline">
-                  <a href="#" className="hover:underline text-black">
+                  <span className="hover:underline text-black">
                     Forgot your password
-                  </a>
+                  </span>
                 </Link>
               </div>
-              <button className="w-full py-2 mt-4 text-black text-lg lg:text-xl bg-yellow-500 rounded hover:bg-yellow-600">
-                LOGIN
-              </button>
+
+              <div className="flex justify-center py-2 mt-4">
+                <FilledButton text="SIGN UP" size="full" loading={loading} />
+              </div>
             </form>
           </div>
-        </div>
-
-        {/* News Section */}
-        <div className="mt-[45px] h-10 w-full max-w-[1000px] p-4 bg-gray-100 text-black text-lg text-left flex items-center rounded-lg shadow bg-[url('/src/assets/News_bg.png')] bg-cover bg-center">
-          <img src={docIcon} alt="News icon" className="h-5 w-5" />
-          <span className="font-semibold ml-2">News:</span>
-          <span className="ml-2">
-            Discover the latest travel updates and promotions!
-          </span>
         </div>
       </div>
     </StandardLayout>
   );
 };
 
-export const SelectButton: React.FC = () => {
-  const bookingButton = useRef<HTMLButtonElement | null>(null);
-  const manageButton = useRef<HTMLButtonElement | null>(null);
-
-  const handleButtonClick = (buttonName: string) => {
-    // Reset button states
-    if (bookingButton.current)
-      bookingButton.current.classList.remove("bg-primary", "text-white");
-    if (manageButton.current)
-      manageButton.current.classList.remove("bg-primary", "text-white");
-
-    // Add selected state
-    if (buttonName === "Booking" && bookingButton.current) {
-      bookingButton.current.classList.add("bg-primary", "text-white");
-    } else if (buttonName === "Manage" && manageButton.current) {
-      manageButton.current.classList.add("bg-primary", "text-white");
-    }
-  };
-
+const SelectButton: React.FC = () => {
   return (
-    <div className="flex flex-col lg:flex-row justify-center space-y-4 lg:space-y-0 lg:space-x-8 mb-6">
+    <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8 mb-6">
       <Link to="/booking" className="text-white no-underline">
-        <button
-          ref={bookingButton}
-          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white focus:bg-primary focus:text-white"
-          onClick={() => handleButtonClick("Booking")}
-        >
-          Booking
-        </button>
+        <OutlinedButton text="Booking" size="large" />
       </Link>
+
       <Link to="/manage" className="text-white no-underline">
-        <button
-          ref={manageButton}
-          className="w-full lg:w-[250px] h-[50px] lg:h-[60px] text-base lg:text-xl font-bold py-2 px-6 border-[#1B304F] bg-white text-[#1B304F] hover:bg-primary hover:text-white focus:bg-primary focus:text-white"
-          onClick={() => handleButtonClick("Manage")}
-        >
-          Manage
-        </button>
+        <OutlinedButton text="Manage Booking" size="large" />
       </Link>
     </div>
   );
 };
+
+export default SelectButton;
