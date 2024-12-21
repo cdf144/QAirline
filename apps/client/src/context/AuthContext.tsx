@@ -5,6 +5,7 @@ interface AuthContextProps {
   roles: string[];
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -63,9 +64,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setRoles(["user"]);
   };
 
+  const logout = async () => {
+    await fetch(
+      new URL("/v1/auth/logout", import.meta.env.VITE_API_BASE_URL).toString(),
+      {
+        method: "POST",
+        credentials: "include",
+      },
+    );
+
+    setIsAuthenticated(false);
+    setRoles([]);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, roles, setIsAuthenticated, login }}
+      value={{
+        isAuthenticated,
+        roles,
+        setIsAuthenticated,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

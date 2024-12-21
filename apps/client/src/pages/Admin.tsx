@@ -20,18 +20,18 @@ export const Sidebar: React.FC<{
       icon: noteIcon,
     },
     {
-      id: "flight-detail",
-      label: "Flight Detail",
+      id: "create-flight",
+      label: "Create Flight",
       icon: flightIcon,
     },
     {
-      id: "booking-detail",
-      label: "Booking Detail",
+      id: "booking-stats",
+      label: "Booking Stats",
       icon: bookingIcon,
     },
     {
-      id: "plane-detail",
-      label: "Plane Detail",
+      id: "register-aircraft",
+      label: "Register Aircraft",
       icon: planeIcon,
     },
     { id: "change-time", label: "Change Time", icon: delayIcon },
@@ -95,6 +95,7 @@ interface FormLayoutProps {
   submitText: string;
   title: string;
   className?: string;
+  onSubmit: (event: React.FormEvent) => void;
 }
 
 const FormLayout: React.FC<FormLayoutProps> = ({
@@ -102,6 +103,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   submitText,
   title,
   className,
+  onSubmit,
 }) => (
   <div
     className={`bg-white p-8 rounded-md shadow-lg w-11/12 md:w-8/12 space-y-6 ${className}`}
@@ -109,77 +111,186 @@ const FormLayout: React.FC<FormLayoutProps> = ({
     <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
       {title}
     </h1>
-    {children}
-    <FilledButton text={submitText} size="full" />
+    <form onSubmit={onSubmit} className="space-y-4">
+      {children}
+      <FilledButton text={submitText} size="full" />
+    </form>
   </div>
 );
 
-const PostBlogForm = () => (
-  <FormLayout submitText="Post" title="Post Information" className="mt-[120px]">
-    <input
-      type="text"
-      placeholder="Introduction"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="text"
-      placeholder="Promotion"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="text"
-      placeholder="Announcement"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="text"
-      placeholder="News"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-  </FormLayout>
-);
+const PostBlogForm: React.FC<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSubmit: (endpoint: string, method: string, body?: any) => Promise<any>;
+}> = ({ onSubmit }) => {
+  const [notificationBody, setNotificationBody] = useState("");
+  const [newsBody, setNewsBody] = useState("");
+  const [promotionBody, setPromotionBody] = useState("");
 
-const FlightDetailForm = () => (
-  <FormLayout submitText="Submit" title="Flight Detail" className="mt-[120px]">
-    <input
-      type="text"
-      placeholder="Flight Number"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="text"
-      placeholder="Flight Code"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="text"
-      placeholder="Plane Type"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="text"
-      placeholder="Departure"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="text"
-      placeholder="Destination"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="time"
-      className="w-full p-3 pr-5 border border-black rounded-md bg-white text-black focus:outline-none"
-      style={{
-        backgroundImage: 'url("/src/assets/clock.jpeg")',
-        backgroundSize: "20px 20px",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "right 21px center",
-      }}
-    />
-  </FormLayout>
-);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const blogPosts = [
+      {
+        title: "Notification",
+        body: notificationBody || null,
+        category: "notification",
+      },
+      { title: "News", body: newsBody || null, category: "news" },
+      {
+        title: "Promotion",
+        body: promotionBody || null,
+        category: "promotion",
+      },
+    ];
 
-const BookingDetailForm = () => (
+    for (const post of blogPosts) {
+      if (post.body) {
+        await onSubmit("/v1/blog", "POST", post);
+      }
+    }
+  };
+
+  return (
+    <FormLayout
+      submitText="Post"
+      title="Post Information"
+      onSubmit={handleSubmit}
+      className="mt-12"
+    >
+      <input
+        type="text"
+        placeholder="Notification"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={notificationBody}
+        onChange={(event) => {
+          setNotificationBody(event.target.value);
+        }}
+      />
+      <input
+        type="text"
+        placeholder="News"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={newsBody}
+        onChange={(event) => {
+          setNewsBody(event.target.value);
+        }}
+      />
+      <input
+        type="text"
+        placeholder="Promotion"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={promotionBody}
+        onChange={(event) => {
+          setPromotionBody(event.target.value);
+        }}
+      />
+    </FormLayout>
+  );
+};
+
+const CreateFlightForm: React.FC<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSubmit: (endpoint: string, method: string, body?: any) => Promise<any>;
+}> = ({ onSubmit }) => {
+  const [aircraftId, setAircraftId] = useState("");
+  const [departureAirportId, setDepartureAirportId] = useState("");
+  const [destinationAirportId, setDestinationAirportId] = useState("");
+  const [departureTime, setDepartureTime] = useState("");
+  const [arrivalTime, setArrivalTime] = useState("");
+  const [status, setStatus] = useState("");
+  const [price, setPrice] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    await onSubmit("/v1/flight", "POST", {
+      aircraftId,
+      departureAirportId,
+      destinationAirportId,
+      departureTime,
+      arrivalTime,
+      status: status ? status : "scheduled",
+      price,
+    });
+  };
+
+  return (
+    <FormLayout
+      submitText="Submit"
+      title="Create Flight"
+      onSubmit={handleSubmit}
+      className="mt-12"
+    >
+      <input
+        type="text"
+        placeholder="Aircraft ID"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={aircraftId}
+        onChange={(event) => {
+          setAircraftId(event.target.value);
+        }}
+      />
+
+      <input
+        type="text"
+        placeholder="Departure Airport ID"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={departureAirportId}
+        onChange={(event) => {
+          setDepartureAirportId(event.target.value);
+        }}
+      />
+
+      <input
+        type="text"
+        placeholder="Destination Airport ID"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={destinationAirportId}
+        onChange={(event) => {
+          setDestinationAirportId(event.target.value);
+        }}
+      />
+
+      <input
+        type="datetime-local"
+        className="w-full p-3 pr-5 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={departureTime}
+        onChange={(event) => {
+          setDepartureTime(event.target.value);
+        }}
+      />
+
+      <input
+        type="datetime-local"
+        className="w-full p-3 pr-5 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={arrivalTime}
+        onChange={(event) => {
+          setArrivalTime(event.target.value);
+        }}
+      />
+
+      <input
+        type="text"
+        placeholder="Status"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={status}
+        onChange={(event) => {
+          setStatus(event.target.value);
+        }}
+      />
+
+      <input
+        type="text"
+        placeholder="Price"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={price}
+        onChange={(event) => {
+          setPrice(event.target.value);
+        }}
+      />
+    </FormLayout>
+  );
+};
+
+const BookingStatsPage = () => (
   <div className="space-y-5 w-11/12 md:w-8/12">
     <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
       <div className="flex w-full items-center justify-between p-4 bg-green-100 rounded-2xl h-24">
@@ -211,65 +322,136 @@ const BookingDetailForm = () => (
   </div>
 );
 
-const PlaneDetailForm = () => (
-  <FormLayout submitText="Submit" title="Plane Detail" className="mt-[120px]">
-    <input
-      type="text"
-      placeholder="Plane Code"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="text"
-      placeholder="Manufacturer"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="date"
-      placeholder="dd/mm/yyyy"
-      className="w-full p-3 pr-5 border border-black rounded-md bg-white text-black focus:outline-none placeholder-gray-400"
-      style={{
-        backgroundImage: 'url("/src/assets/lich.png")',
-        backgroundSize: "20px 20px",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "right 20px center",
-      }}
-    />
-    <input
-      type="number"
-      placeholder="Business Seats"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="number"
-      placeholder="Economy Seats"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-  </FormLayout>
-);
+const RegisterAircraftForm: React.FC<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSubmit: (endpoint: string, method: string, body?: any) => Promise<any>;
+}> = ({ onSubmit }) => {
+  const [manufacturer, setManufacturer] = useState("");
+  const [model, setModel] = useState("");
+  const [economySeat, setEconomySeats] = useState(0);
+  const [businessSeat, setBusinessSeats] = useState(0);
 
-const ChangeTimeForm = () => (
-  <FormLayout submitText="Update" title="Change Time" className="mt-[100px]">
-    <input
-      type="text"
-      placeholder="Flight Code"
-      className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
-    />
-    <input
-      type="time"
-      className="w-full p-3 pr-5 border border-black rounded-md bg-white text-black focus:outline-none"
-      style={{
-        backgroundImage: 'url("/src/assets/clock.jpeg")',
-        backgroundSize: "20px 20px",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "right 21px center",
-      }}
-    />
-  </FormLayout>
-);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    await onSubmit("/v1/aircraft", "POST", {
+      manufacturer: manufacturer || null,
+      model: model || null,
+      businessSeat: businessSeat || null,
+      economySeat: economySeat || null,
+    });
+  };
+
+  return (
+    <FormLayout
+      submitText="Submit"
+      title="Register Aircraft"
+      onSubmit={handleSubmit}
+      className="mt-12"
+    >
+      <input
+        type="text"
+        placeholder="Manufacturer"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={manufacturer}
+        onChange={(event) => {
+          setManufacturer(event.target.value);
+        }}
+      />
+
+      <input
+        type="text"
+        placeholder="Model"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={model}
+        onChange={(event) => {
+          setModel(event.target.value);
+        }}
+      />
+
+      <input
+        type="number"
+        placeholder="Economy Seats"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={economySeat}
+        onChange={(event) => {
+          setEconomySeats(parseInt(event.target.value));
+        }}
+      />
+
+      <input
+        type="number"
+        placeholder="Business Seats"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={businessSeat}
+        onChange={(event) => {
+          setBusinessSeats(parseInt(event.target.value));
+        }}
+      />
+    </FormLayout>
+  );
+};
+
+const ChangeTimeForm: React.FC<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSubmit: (endpoint: string, method: string, body?: any) => Promise<any>;
+}> = ({ onSubmit }) => {
+  const [flightCode, setFlightCode] = useState("");
+  const [departureTime, setDepartureTime] = useState("");
+  const [arrivalTime, setArrivalTime] = useState("");
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log(flightCode, departureTime, arrivalTime);
+    await onSubmit(`/v1/flight/${flightCode}`, "PATCH", {
+      departureTime: departureTime || null,
+      arrivalTime: arrivalTime || null,
+    });
+  };
+
+  return (
+    <FormLayout
+      submitText="Update"
+      title="Change Time"
+      onSubmit={handleSubmit}
+      className="mt-12"
+    >
+      <input
+        type="text"
+        placeholder="Flight Code"
+        className="w-full p-3 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={flightCode}
+        onChange={(event) => {
+          setFlightCode(event.target.value);
+        }}
+      />
+
+      <input
+        type="datetime-local"
+        placeholder="New Departure Time"
+        className="w-full p-3 pr-5 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={departureTime}
+        onChange={(event) => {
+          setDepartureTime(event.target.value);
+        }}
+      />
+
+      <input
+        type="datetime-local"
+        placeholder="New Arrival Time"
+        className="w-full p-3 pr-5 border border-black rounded-md bg-white text-black focus:outline-none"
+        value={arrivalTime}
+        onChange={(event) => {
+          setArrivalTime(event.target.value);
+        }}
+      />
+    </FormLayout>
+  );
+};
 
 export const AdminPage: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedForm, setSelectedForm] = useState<string>("post-blog");
+  const [resultMessage, setResultMessage] = useState<string | null>(null);
 
   const handleResize = () => {
     if (window.innerWidth < 1024) {
@@ -286,18 +468,52 @@ export const AdminPage: React.FC = () => {
     };
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleSubmit = async (endpoint: string, method: string, body?: any) => {
+    setResultMessage(null);
+    try {
+      const response = await fetch(
+        new URL(endpoint, import.meta.env.VITE_API_BASE_URL).toString(),
+        {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: body ? JSON.stringify(body) : undefined,
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Operation failed");
+      }
+
+      const data = await response.json();
+      setResultMessage("Operation successful");
+      return data;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setResultMessage(`Operation failed: ${error.message}`);
+      } else {
+        setResultMessage("Operation failed: An unknown error occurred");
+      }
+      return null;
+    }
+  };
+
   const renderForm = () => {
     switch (selectedForm) {
       case "post-blog":
-        return <PostBlogForm />;
-      case "flight-detail":
-        return <FlightDetailForm />;
-      case "booking-detail":
-        return <BookingDetailForm />;
-      case "plane-detail":
-        return <PlaneDetailForm />;
+        return <PostBlogForm onSubmit={handleSubmit} />;
+      case "create-flight":
+        return <CreateFlightForm onSubmit={handleSubmit} />;
+      case "booking-stats":
+        return <BookingStatsPage />;
+      case "register-aircraft":
+        return <RegisterAircraftForm onSubmit={handleSubmit} />;
       case "change-time":
-        return <ChangeTimeForm />;
+        return <ChangeTimeForm onSubmit={handleSubmit} />;
       default:
         return <h1>Select an option from the sidebar</h1>;
     }
@@ -320,6 +536,11 @@ export const AdminPage: React.FC = () => {
       />
       <div className="flex justify-center items-center flex-1">
         {renderForm()}
+        {resultMessage && (
+          <div className="absolute bottom-4 left-4 text-black bg-white p-4 rounded shadow-md">
+            {resultMessage}
+          </div>
+        )}
       </div>
     </div>
   );

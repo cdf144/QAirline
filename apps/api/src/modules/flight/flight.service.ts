@@ -102,10 +102,12 @@ export class FlightService {
 
     if (newDepartureTime) {
       const parsedNewDepartureTime = new Date(newDepartureTime);
-      if (newArrivalTime && parsedNewDepartureTime > new Date(newArrivalTime)) {
-        throw new BadRequestException(
-          'New departure time cannot be later than new arrival time',
-        );
+      if (newArrivalTime) {
+        if (parsedNewDepartureTime > new Date(newArrivalTime)) {
+          throw new BadRequestException(
+            'New departure time cannot be later than new arrival time',
+          );
+        }
       } else if (parsedNewDepartureTime > flight.arrivalTime) {
         throw new BadRequestException(
           'New departure time cannot be later than old arrival time',

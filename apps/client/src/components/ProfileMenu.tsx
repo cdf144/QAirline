@@ -1,9 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const ProfileMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -64,6 +70,12 @@ const ProfileMenu: React.FC = () => {
           >
             Admin Page
           </Link>
+          <button
+            onClick={handleLogout}
+            className="block w-full text-left px-4 py-2 text-gray-800"
+          >
+            Logout
+          </button>
         </div>
       )}
     </div>

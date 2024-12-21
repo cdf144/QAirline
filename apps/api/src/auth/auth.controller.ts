@@ -46,4 +46,11 @@ export class AuthController {
   getProfile(@Req() req) {
     return req.user as JwtPayloadResult;
   }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('logout')
+  logout(@Res() res: FastifyReply) {
+    res.clearCookie(COOKIE_NAMES.ACCESS_TOKEN);
+    res.send({ message: 'Logged out successfully' });
+  }
 }
