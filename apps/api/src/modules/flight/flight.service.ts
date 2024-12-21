@@ -20,6 +20,16 @@ export class FlightService {
     return this.flightModel.find().lean().exec();
   }
 
+  async findAllFull(): Promise<Flight[]> {
+    return this.flightModel
+      .find()
+      .populate('aircraftId', 'manufacturer model')
+      .populate('departureAirportId', 'code country city')
+      .populate('destinationAirportId', 'code country city')
+      .lean()
+      .exec();
+  }
+
   async findOneById(id: string): Promise<Flight> {
     return this.findOne({ _id: id });
   }

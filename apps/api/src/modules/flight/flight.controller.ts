@@ -39,6 +39,19 @@ export class FlightController {
   }
 
   @Public()
+  @Get('full')
+  async findAllFull(@Res() res: FastifyReply): Promise<void> {
+    const flights = await this.flightService.findAllFull();
+
+    res.send(
+      flights.map((flight) => ({
+        ...flight,
+        price: flight.price.toString(),
+      })),
+    );
+  }
+
+  @Public()
   @Get(':identifier')
   async findOne(
     @Res() res: FastifyReply,
