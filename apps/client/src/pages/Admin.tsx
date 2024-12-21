@@ -1,51 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import bookingIcon from "../assets/booking.png";
+import bookingBg from "../assets/bookingbg.jpg";
+import delayIcon from "../assets/delay.png";
+import flightIcon from "../assets/flight.png";
+import noteIcon from "../assets/note.png";
+import planeIcon from "../assets/plane.png";
+import FilledButton from "../components/buttons/Filled";
 
 export const Sidebar: React.FC<{
   isCollapsed: boolean;
-  toggleSidebar: () => void;
   selectedForm: string;
   setSelectedForm: (form: string) => void;
-}> = ({ isCollapsed, toggleSidebar, selectedForm, setSelectedForm }) => {
-  // Bổ sung trong danh sách `buttons`
+}> = ({ isCollapsed, selectedForm, setSelectedForm }) => {
   const buttons = [
     {
-      id: "postInformation",
-      label: "Post Information",
-      icon: "/src/assets/note.png",
+      id: "post-blog",
+      label: "Post Blog",
+      icon: noteIcon,
     },
     {
-      id: "flightDetail",
+      id: "flight-detail",
       label: "Flight Detail",
-      icon: "/src/assets/plane.png",
+      icon: flightIcon,
     },
     {
-      id: "bookingDetail", // Thêm nút mới
+      id: "booking-detail",
       label: "Booking Detail",
-      icon: "/src/assets/booking.png", // Đường dẫn icon tùy bạn thay đổi
+      icon: bookingIcon,
     },
     {
-      id: "planeDetail",
+      id: "plane-detail",
       label: "Plane Detail",
-      icon: "/src/assets/flight.png",
+      icon: planeIcon,
     },
-    { id: "changeTime", label: "Change Time", icon: "/src/assets/delay.png" },
+    { id: "change-time", label: "Change Time", icon: delayIcon },
   ];
 
   return (
     <div
       className={`relative flex flex-col ${
-        isCollapsed ? "w-[80px]" : "w-[250px]"
+        isCollapsed ? "w-24" : "w-2/12"
       } min-h-screen bg-[#6CADC5] shadow-md transition-all duration-300`}
     >
       <div className={`p-6 bg-white ${isCollapsed ? "text-center" : ""}`}>
         <h2
-          className={`text-lg font-bold text-[#1B304F] text-[39px] ${
+          className={`text-lg font-bold text-primary ${
             isCollapsed ? "hidden" : "block"
           }`}
         >
           Dashboard
         </h2>
       </div>
+
       <nav className="flex flex-col space-y-4 p-4">
         {buttons.map((button) => (
           <button
@@ -53,10 +60,10 @@ export const Sidebar: React.FC<{
             onClick={() => setSelectedForm(button.id)}
             className={`flex items-center ${
               isCollapsed ? "justify-center" : ""
-            } w-full px-4 py-2 rounded-md shadow-md ${
+            } w-full px-4 py-2 rounded-3xl shadow-md transition-colors whitespace-nowrap overflow-hidden ${
               selectedForm === button.id
-                ? "bg-[#1B304F] text-white"
-                : "bg-white text-gray-600 hover:bg-[#1B304F] hover:text-white"
+                ? "bg-primary text-white"
+                : "bg-white text-gray-600 hover:bg-primary hover:text-white"
             }`}
           >
             <img
@@ -70,15 +77,14 @@ export const Sidebar: React.FC<{
           </button>
         ))}
 
-        {/* Nút thu gọn/mở rộng */}
-        <button
-          onClick={toggleSidebar}
-          className={`flex items-center ${
+        <Link
+          to="/"
+          className={`flex items-center whitespace-nowrap overflow-hidden ${
             isCollapsed ? "justify-center" : ""
-          } w-full mt-4 px-4 py-2 bg-gray-300 text-gray-600 rounded-md shadow-md hover:bg-gray-400 focus:outline-none`}
+          } w-full mt-4 px-4 py-2 bg-gray-300 text-gray-600 rounded-3xl shadow-md hover:bg-gray-400 focus:outline-none`}
         >
-          {isCollapsed ? "▶" : "◀ Collapse"}
-        </button>
+          ◀ Home
+        </Link>
       </nav>
     </div>
   );
@@ -98,19 +104,17 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   className,
 }) => (
   <div
-    className={`bg-white p-8 rounded-md shadow-lg w-[600px] space-y-6 ${className}`}
+    className={`bg-white p-8 rounded-md shadow-lg w-11/12 md:w-8/12 space-y-6 ${className}`}
   >
     <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
       {title}
     </h1>
     {children}
-    <button className="w-full py-3 mt-2 bg-yellow-500 text-white font-semibold rounded-md hover:bg-yellow-600 transition text-lg">
-      {submitText}
-    </button>
+    <FilledButton text={submitText} size="full" />
   </div>
 );
 
-const PostInformationForm = () => (
+const PostBlogForm = () => (
   <FormLayout submitText="Post" title="Post Information" className="mt-[120px]">
     <input
       type="text"
@@ -174,28 +178,32 @@ const FlightDetailForm = () => (
     />
   </FormLayout>
 );
+
 const BookingDetailForm = () => (
-  <div>
-    <div className="flex flex-col gap-4 bg-white p-4  rounded-lg shadow-lg w-[800px]">
-      <div className="flex items-center justify-between p-4 bg-green-100 h-[100px] rounded-lg">
+  <div className="space-y-5 w-11/12 md:w-8/12">
+    <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
+      <div className="flex w-full items-center justify-between p-4 bg-green-100 rounded-2xl h-24">
         <span className="text-4xl font-bold text-green-600">5 Lakhs</span>
         <span className="text-gray-600 text-lg">Today's Booking</span>
       </div>
     </div>
-    <div className="flex flex-col mt-5 gap-4 bg-white p-4 rounded-lg shadow-lg w-[800px]">
-      <div className="flex items-center justify-between p-4 bg-blue-100 h-[100px] rounded-lg">
+
+    <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
+      <div className="flex w-full items-center justify-between p-4 bg-blue-100 rounded-lg h-24">
         <span className="text-4xl font-bold text-blue-600">60 Nos</span>
         <span className="text-gray-600 text-lg">Today's Fly Flight</span>
       </div>
     </div>
-    <div className="flex flex-col mt-5 gap-4 bg-white p-4 rounded-lg shadow-lg w-[800px]">
-      <div className="flex items-center justify-between p-4 bg-red-100 h-[100px] rounded-lg">
+
+    <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
+      <div className="flex w-full items-center justify-between p-4 bg-red-100 rounded-lg h-24">
         <span className="text-4xl font-bold text-red-600">10 Nos</span>
         <span className="text-gray-600 text-lg">30 day's Booking</span>
       </div>
     </div>
-    <div className="flex flex-col mt-5 gap-4 bg-white p-4 rounded-lg shadow-lg w-[800px]">
-      <div className="flex items-center justify-between p-4 bg-yellow-100 h-[100px] rounded-lg">
+
+    <div className="flex gap-4 bg-white p-4 rounded-3xl shadow-lg max-w-3xl">
+      <div className="flex w-full items-center justify-between p-4 bg-yellow-100 rounded-lg h-24">
         <span className="text-4xl font-bold text-yellow-600">90 Per</span>
         <span className="text-gray-600 text-lg">Proceeds</span>
       </div>
@@ -261,23 +269,34 @@ const ChangeTimeForm = () => (
 
 export const AdminPage: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selectedForm, setSelectedForm] = useState<string>("postInformation");
+  const [selectedForm, setSelectedForm] = useState<string>("post-blog");
 
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
+  const handleResize = () => {
+    if (window.innerWidth < 1024) {
+      setIsCollapsed(true);
+    } else {
+      setIsCollapsed(false);
+    }
   };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const renderForm = () => {
     switch (selectedForm) {
-      case "postInformation":
-        return <PostInformationForm />;
-      case "flightDetail":
+      case "post-blog":
+        return <PostBlogForm />;
+      case "flight-detail":
         return <FlightDetailForm />;
-      case "bookingDetail": // Xử lý khi nhấn nút Booking Detail
+      case "booking-detail":
         return <BookingDetailForm />;
-      case "planeDetail":
+      case "plane-detail":
         return <PlaneDetailForm />;
-      case "changeTime":
+      case "change-time":
         return <ChangeTimeForm />;
       default:
         return <h1>Select an option from the sidebar</h1>;
@@ -288,7 +307,7 @@ export const AdminPage: React.FC = () => {
     <div
       className="flex w-screen min-h-screen"
       style={{
-        backgroundImage: 'url("/src/assets/bookingbg.jpg")',
+        backgroundImage: `url(${bookingBg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -296,7 +315,6 @@ export const AdminPage: React.FC = () => {
     >
       <Sidebar
         isCollapsed={isCollapsed}
-        toggleSidebar={toggleSidebar}
         selectedForm={selectedForm}
         setSelectedForm={setSelectedForm}
       />

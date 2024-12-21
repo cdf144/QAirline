@@ -23,7 +23,7 @@ const OutlinedButton: React.FC<OutlinedButtonProps> = ({
 }) => {
   return (
     <button
-      className={`${sizeClasses[size]} px-3 py-1 bg-transparent hover:bg-${color} rounded-full border border-${color} border-solid text-base text-neutral-700 hover:text-neutral-100 font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden`}
+      className={`${sizeClasses[size]} px-3 py-1 bg-transparent hover:bg-${color} rounded-full border border-primary border-solid text-base text-neutral-700 hover:text-neutral-100 font-bold focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors whitespace-nowrap overflow-hidden`}
       disabled={loading}
     >
       {loading ? <div className="loader"></div> : text}
