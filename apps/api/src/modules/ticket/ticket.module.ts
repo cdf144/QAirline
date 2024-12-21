@@ -10,5 +10,6 @@ import { TicketService } from './ticket.service';
   ],
   providers: [TicketService],
   controllers: [TicketController],
+  exports: [TicketService],
 })
 export class TicketModule {}

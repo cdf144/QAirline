@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { TicketService } from '../ticket/ticket.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { Booking } from './schemas/booking.schema';
 
@@ -13,6 +14,7 @@ import { Booking } from './schemas/booking.schema';
 export class BookingService {
   constructor(
     @InjectModel(Booking.name) private bookingModel: Model<Booking>,
+    private readonly ticketService: TicketService,
   ) {}
 
   async findAll(): Promise<Booking[]> {
@@ -51,6 +53,29 @@ export class BookingService {
         }
         console.error(error);
         throw new InternalServerErrorException('Failed to find booking');
+      });
+  }
+
+  async findByUserId(userId: string): Promise<Booking[]> {
+    let userObjectId: Types.ObjectId;
+    try {
+      userObjectId = Types.ObjectId.createFromHexString(userId);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new BadRequestException(
+        `Invalid hexstring id ${userId} provided to find bookings by user`,
+      );
+    }
+
+    return this.bookingModel
+      .find({ userId: userObjectId })
+      .lean()
+      .exec()
+      .catch((error) => {
+        console.error(error);
+        throw new InternalServerErrorException(
+          'Failed to find bookings by user',
+        );
       });
   }
 
@@ -132,6 +157,12 @@ export class BookingService {
         console.error(error);
         throw new InternalServerErrorException('Failed to delete booking');
       });
+  }
+
+  async deleteBookingAndTickets(bookingId: string): Promise<void> {
+    const bookingObjectId = Types.ObjectId.createFromHexString(bookingId);
+    await this.ticketService.deleteByBookingId(bookingObjectId);
+    await this.bookingModel.findByIdAndDelete(bookingObjectId).exec();
   }
 
   getIdentifierType(identifier: string): 'mongoId' | 'bookingCode' | 'invalid' {

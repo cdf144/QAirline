@@ -79,6 +79,47 @@ export class TicketService {
       });
   }
 
+  async findByBookingId(bookingId: string): Promise<Ticket[]> {
+    let bookingObjectId: Types.ObjectId;
+    try {
+      bookingObjectId = Types.ObjectId.createFromHexString(bookingId);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new BadRequestException(
+        `Invalid hexstring id ${bookingId} provided to find tickets by booking`,
+      );
+    }
+
+    return this.ticketModel
+      .find({ bookingId: bookingObjectId })
+      .populate({
+        path: 'outboundFlightId',
+        select:
+          'code departureAirportId destinationAirportId departureTime arrivalTime',
+        populate: [
+          { path: 'departureAirportId', select: 'code country city' },
+          { path: 'destinationAirportId', select: 'code country city' },
+        ],
+      })
+      .populate({
+        path: 'returnFlightId',
+        select:
+          'code departureAirportId destinationAirportId departureTime arrivalTime',
+        populate: [
+          { path: 'departureAirportId', select: 'code country city' },
+          { path: 'destinationAirportId', select: 'code country city' },
+        ],
+      })
+      .lean()
+      .exec()
+      .catch((error) => {
+        console.error(error);
+        throw new InternalServerErrorException(
+          'Failed to find tickets by booking',
+        );
+      });
+  }
+
   async update(id: string, updateTicketDto: UpdateTicketDto): Promise<Ticket> {
     const ticket = await this.findOne(id);
     const { status, totalPrice } = updateTicketDto;
@@ -120,5 +161,9 @@ export class TicketService {
         console.error(error);
         throw new InternalServerErrorException('Failed to delete ticket');
       });
+  }
+
+  async deleteByBookingId(bookingId: Types.ObjectId): Promise<void> {
+    await this.ticketModel.deleteMany({ bookingId }).exec();
   }
 }

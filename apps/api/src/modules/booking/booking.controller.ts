@@ -14,6 +14,7 @@ import { COOKIE_NAMES } from 'src/common/constants';
 import { ConditionalApiCookieAuth } from 'src/common/decorators/conditional-api-cookie-auth.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/enums/role.enum';
+import { TicketService } from '../ticket/ticket.service';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { Booking } from './schemas/booking.schema';
@@ -25,7 +26,10 @@ const INVALID_IDENTIFIER_MESSAGE =
 @ConditionalApiCookieAuth(COOKIE_NAMES.ACCESS_TOKEN)
 @Controller('v1/booking')
 export class BookingController {
-  constructor(private readonly bookingService: BookingService) {}
+  constructor(
+    private readonly bookingService: BookingService,
+    private readonly ticketService: TicketService,
+  ) {}
   // TODO: Update booking?
 
   @Roles(Role.Admin)
@@ -55,6 +59,30 @@ export class BookingController {
     }
 
     res.send(booking);
+  }
+
+  @Get('user/:userId')
+  async findUserBookings(
+    @Res() res: FastifyReply,
+    @Param('userId') userId: string,
+  ) {
+    const bookings = await this.bookingService.findByUserId(userId);
+    const bookingsWithTickets = await Promise.all(
+      bookings.map(async (booking) => {
+        const tickets = await this.ticketService.findByBookingId(
+          booking._id.toString(),
+        );
+        return {
+          ...booking,
+          tickets: tickets.map((ticket) => ({
+            seat: ticket.seat,
+            outboundFlightId: ticket.outboundFlightId,
+            returnFlightId: ticket.returnFlightId,
+          })),
+        };
+      }),
+    );
+    res.send(bookingsWithTickets);
   }
 
   @Roles(Role.Admin)
@@ -100,5 +128,16 @@ export class BookingController {
     }
 
     res.send(deletedBooking);
+  }
+
+  @Delete('user/:bookingId')
+  async deleteBookingAndTickets(
+    @Res() res: FastifyReply,
+    @Param('bookingId') bookingId: string,
+  ) {
+    await this.bookingService.deleteBookingAndTickets(bookingId);
+    res.send({
+      message: 'Booking and associated tickets deleted successfully',
+    });
   }
 }
