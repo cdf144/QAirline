@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
+  email: string;
   roles: string[];
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
@@ -15,6 +16,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [roles, setRoles] = useState<string[]>([]);
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -33,10 +35,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const data = await response.json();
         setIsAuthenticated(true);
         setRoles(data.roles);
+        setEmail(data.email);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setIsAuthenticated(false);
         setRoles([]);
+        setEmail("");
       }
     };
 
@@ -62,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setIsAuthenticated(true);
     setRoles(["user"]);
+    setEmail(email);
   };
 
   const logout = async () => {
@@ -75,12 +80,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setIsAuthenticated(false);
     setRoles([]);
+    setEmail("");
   };
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        email,
         roles,
         setIsAuthenticated,
         login,
