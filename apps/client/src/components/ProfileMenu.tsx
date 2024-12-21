@@ -50,6 +50,7 @@ const ProfileMenu: React.FC = () => {
           ></path>
         </svg>
       </button>
+
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20">
           <Link
@@ -59,10 +60,10 @@ const ProfileMenu: React.FC = () => {
             View Profile
           </Link>
           <Link
-            to="/tickets"
+            to="/manage"
             className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
           >
-            View Tickets
+            Manage Bookings
           </Link>
           <Link
             to="/admin"
@@ -72,7 +73,7 @@ const ProfileMenu: React.FC = () => {
           </Link>
           <button
             onClick={handleLogout}
-            className="block w-full text-left px-4 py-2 text-gray-800"
+            className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
           >
             Logout
           </button>

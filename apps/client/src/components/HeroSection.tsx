@@ -25,8 +25,8 @@ const HeroSection: React.FC = () => {
         </div>
 
         <div className="lg:w-1/2 m-8 flex flex-col lg:flex-row items-start lg:items-center justify-between lg:justify-normal">
-          <Link to="/booking" className="mx-4 my-2">
-            <FilledButton text="Booking" size="extraLarge" />
+          <Link to="/blog" className="mx-4 my-2">
+            <FilledButton text="Blog" size="extraLarge" />
           </Link>
           <Link to="/manage" className="mx-4 my-2 text-white no-underline">
             <FilledButton
@@ -36,20 +36,6 @@ const HeroSection: React.FC = () => {
             />
           </Link>
         </div>
-
-        {/* <div
-          className="mt-[50px] md:mt-[100px] mx-auto p-4 bg-gray-100 text-black text-base md:text-lg w-full md:w-[1000px] h-auto md:h-[40px] text-left pl-4 md:pl-10 flex items-center bg-cover bg-center rounded-lg"
-          style={{
-            backgroundImage: "url('/src/assets/News_bg.png')",
-          }}
-        >
-          <img
-            src="/src/assets/news.png"
-            alt="News icon"
-            className="h-5 w-5 mr-1"
-          />
-          <span className="font-semibold">News:</span>
-        </div> */}
       </div>
     </div>
   );
