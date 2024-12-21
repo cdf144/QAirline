@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/react": "^19.0.2",
     "concurrently": "^9.1.0"
-  },
-  "dependencies": {}
+  }
 }
